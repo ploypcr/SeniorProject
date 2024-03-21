@@ -1,0 +1,27 @@
+version: '3.4'
+services:
+  sql:
+    restart: always
+    image: "mcr.microsoft.com/mssql/server:2022-latest"
+    container_name: sql_server2022
+    ports: # not actually needed, because the two services are on the same network
+      - "1433:1433" 
+
+  
+  historywebapi:
+    container_name: history-web-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports: 
+      - "5000:8080"
+    depends_on:
+      - sql
+    volumes:
+      - ./Api/Uploads:/app/Uploads
+    healthcheck:
+      test: ["CMD-SHELL", "curl --fail http://localhost:8080/healthz || exit 1"]
+      interval: 30s
+      timeout: 30s
+      retries: 3
