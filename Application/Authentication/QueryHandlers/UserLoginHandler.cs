@@ -30,23 +30,22 @@ public class UserLoginHandler : IRequestHandler<UserLogin, TokenResult>
         var user = await _userRepository.GetUserByEmailAsync(request.Email);
 
         if(user == null){
-            throw new InvalidCredentialException("Don't have this user");
+            throw new InvalidCredentialException("Invalid user or password.");
         }
 
         if (!BC.Verify(request.Password, user.Password)){
-            throw new InvalidCredentialException("Password doesn't match.");
+            throw new InvalidCredentialException("Invalid user or password.");
         }
-        
+
         if(user.EmailVerified == false){
 
             string emailToken = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
-            var body = "Please confirm your email address <a href=#URL#>Click here</a>";
-            var url = $"https://localhost:7197/api/confirmEmail?id={user.Id}&code={emailToken}";
-            body = body.Replace("#URL#", url);
-            
+            emailToken = emailToken.Replace("=","");
+            emailToken = emailToken.Replace("+","");
             user.UpdateEmailToken(emailToken);
             await _userRepository.UpdateUserAsync(user);
-            await _emailService.SendEmail(user.Email,body);
+            await _emailService.SendEmail(user.Email, user.Id, emailToken);
+
             throw new ArgumentException("Please confirm your email first. we have resend an link to your email.");
         }
 

@@ -46,6 +46,8 @@ public class TokenRequestHandler : IRequestHandler<TokenRequestCommand, TokenRes
         }
 
         var newRefreshToken = _jwtTokenGenerator.GenerateRefreshToken();
+        newRefreshToken = newRefreshToken.Replace("=","");
+        newRefreshToken = newRefreshToken.Replace("+","");
         var newAccessToken = _jwtTokenGenerator.GenerateToken(user, role);
         refreshToken.Update(newRefreshToken);
         await _userRepository.UpdateUserAsync(user);

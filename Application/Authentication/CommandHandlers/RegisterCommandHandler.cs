@@ -34,7 +34,8 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, TokenResu
         
         var token = _jwtTokenGenerator.GenerateToken(user, "User");
         var refreshToken = _jwtTokenGenerator.GenerateRefreshToken();
-
+        refreshToken = refreshToken.Replace("=","");
+        refreshToken = refreshToken.Replace("+","");
         var userRefreshToken = RefreshToken.Create(refreshToken);
         user.AddRefreshToken(userRefreshToken);
         await _userRepository.UpdateUserAsync(user);

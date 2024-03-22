@@ -39,6 +39,8 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, TokenResult>
 
         var token = _jwtTokenGenerator.GenerateToken(user, "Admin");
         var refreshToken = _jwtTokenGenerator.GenerateRefreshToken();
+        refreshToken = refreshToken.Replace("=","");
+        refreshToken = refreshToken.Replace("+","");
         
         var userRefreshToken = RefreshToken.Create(refreshToken);
         user.AddRefreshToken(userRefreshToken);

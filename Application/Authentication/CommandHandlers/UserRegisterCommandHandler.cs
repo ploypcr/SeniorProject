@@ -31,31 +31,21 @@ public class UserRegisterCommandHandler : IRequestHandler<UserRegisterCommand>
         if(user is not null){
             throw new ArgumentException("Already has this user.");
         }
+        if(request.Email.Split("@")[1] != "ku.th"){
+            throw new ArgumentException("This user is not in ku.th domain");
+        }
 
         string emailToken = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
+        emailToken = emailToken.Replace("=","");
+        emailToken = emailToken.Replace("+","");
         var salt = BC.GenerateSalt(10);
         var hashedPassword = BC.HashPassword(request.Password, salt);
-        
+
         user = User.Create(request.FirstName, 
         request.LastName, request.StudentId, request.Email, hashedPassword, emailToken, false);
         await _userRepository.AddUserAsync(user);
 
-        var body = "Please confirm your email address <a href=#URL#>Click here</a>";
-        var url = $"https://localhost:7197/api/confirmEmail?id={user.Id}&code={emailToken}";
-        body = body.Replace("#URL#", url);
-        await _emailService.SendEmail(request.Email, body);
+        await _emailService.SendEmail(request.Email, user.Id, emailToken);
 
-        // var token = _jwtTokenGenerator.GenerateToken(user, "User");
-        // var refreshToken = _jwtTokenGenerator.GenerateRefreshToken();
-
-        // var userRefreshToken = RefreshToken.Create(refreshToken);
-        // user.AddRefreshToken(userRefreshToken);
-        // await _userRepository.UpdateUserAsync(user);
-
-
-        // return new TokenResult(
-        //     token,
-        //     refreshToken, 
-        //     DateTime.UtcNow.AddMinutes(_configuration.GetSection("Jwt:ExpiryMinutes").Get<double>()));
     }
 }

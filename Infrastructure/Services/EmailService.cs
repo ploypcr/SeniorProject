@@ -10,12 +10,15 @@ public class EmailService : IEmailService
     public EmailService(IConfiguration configuration){
         _configuration = configuration;
     }
-    public async Task SendEmail(string To, string body)
+    public async Task SendEmail(string to, string id, string token)
     {
-        var email = new MimeMessage();
+        var body = "Please confirm your email address <a href=#URL#>Click here</a>";
+        var url =  _configuration.GetSection("EmailConfig:BASE_URL").Value+$"/#/confirmEmail?id={id}&code={token}";
+        body = body.Replace("#URL#", url);
 
+        var email = new MimeMessage();
         email.From.Add(new MailboxAddress("KU Vet Learning Lab", _configuration.GetSection("EmailConfig:Email").Value));
-        email.To.Add(new MailboxAddress(To,To));
+        email.To.Add(new MailboxAddress(to,to));
 
         email.Subject = "KU Vet Learning Lab Email Verification";
         email.Body = new TextPart(MimeKit.Text.TextFormat.Html) { 

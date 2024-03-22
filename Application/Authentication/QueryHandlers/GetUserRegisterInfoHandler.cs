@@ -43,7 +43,8 @@ public class GetUserRegisterInfoHandler : IRequestHandler<GetUserRegisterInfo, T
 
         var token = _jwtTokenGenerator.GenerateToken(user, "User");
         var refreshToken = _jwtTokenGenerator.GenerateRefreshToken();
-
+        refreshToken = refreshToken.Replace("=","");
+        refreshToken = refreshToken.Replace("+","");
         user.AddRefreshToken(
             RefreshToken.Create(refreshToken)
         );

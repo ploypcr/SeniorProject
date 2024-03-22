@@ -4,5 +4,5 @@ using Microsoft.AspNetCore.Http;
 namespace Application.Abstractions.Services;
 
 public interface IEmailService{
-    Task SendEmail( string To, string body);
+    Task SendEmail( string to, string id, string token);
 }
