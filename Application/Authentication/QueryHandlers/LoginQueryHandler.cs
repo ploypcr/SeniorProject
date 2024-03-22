@@ -1,7 +1,9 @@
 using Application.Abstractions;
 using Application.Abstractions.Authentication;
 using Application.Authentication.Queries;
+using Domain.Entities;
 using MediatR;
+using Microsoft.Extensions.Configuration;
 
 namespace Application.Authentication.QueryHandlers;
 
@@ -9,9 +11,13 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, TokenResult>
 {
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
     private readonly IUserRepository _userRepository;
-    public LoginQueryHandler(IJwtTokenGenerator jwtTokenGenerator, IUserRepository userRepository){
+    private readonly IConfiguration _configuration;
+
+    public LoginQueryHandler(IConfiguration configuration,IJwtTokenGenerator jwtTokenGenerator, IUserRepository userRepository){
         _jwtTokenGenerator = jwtTokenGenerator;
         _userRepository = userRepository;
+        _configuration = configuration;
+
     }
     public async Task<TokenResult> Handle(LoginQuery request, CancellationToken cancellationToken)
     {
@@ -33,8 +39,15 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, TokenResult>
 
         var token = _jwtTokenGenerator.GenerateToken(user, "Admin");
         var refreshToken = _jwtTokenGenerator.GenerateRefreshToken();
+        
+        var userRefreshToken = RefreshToken.Create(refreshToken);
+        user.AddRefreshToken(userRefreshToken);
+        await _userRepository.UpdateUserAsync(user);
 
         
-        return new TokenResult(token, refreshToken, DateTime.Now.AddMinutes(480));
+        return new TokenResult(
+            token, 
+            refreshToken, 
+            DateTime.UtcNow.AddMinutes(_configuration.GetSection("Jwt:ExpiryMinutes").Get<double>()));
     }
 }

@@ -4,6 +4,7 @@ using Application.Authentication.Commands;
 using Domain.Entities;
 using Google.Apis.Auth;
 using MediatR;
+using Microsoft.Extensions.Configuration;
 
 namespace Application.Authentication.CommandHandlers;
 
@@ -11,10 +12,12 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, TokenResu
 {
     private readonly IUserRepository _userRepository;
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
-    public RegisterCommandHandler(IUserRepository userRepository, IJwtTokenGenerator jwtTokenGenerator)
+    private readonly IConfiguration _configuration;
+    public RegisterCommandHandler(IConfiguration configuration,IUserRepository userRepository, IJwtTokenGenerator jwtTokenGenerator)
     {
         _userRepository = userRepository;
         _jwtTokenGenerator = jwtTokenGenerator;
+        _configuration = configuration;
     }
 
     public async Task<TokenResult> Handle(RegisterCommand request, CancellationToken cancellationToken)
@@ -25,13 +28,21 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, TokenResu
             throw new Exception("Already has this user.");
         }
 
-        user = User.Create(payload.GivenName, 
-        payload.FamilyName, request.StudentId, payload.Email, null);
+        user = User.Create(request.FirstName, 
+        request.LastName, request.StudentId, payload.Email, null);
         await _userRepository.AddUserAsync(user);
         
         var token = _jwtTokenGenerator.GenerateToken(user, "User");
         var refreshToken = _jwtTokenGenerator.GenerateRefreshToken();
 
-        return new TokenResult(token,refreshToken, DateTime.UtcNow.AddMinutes(480));
+        var userRefreshToken = RefreshToken.Create(refreshToken);
+        user.AddRefreshToken(userRefreshToken);
+        await _userRepository.UpdateUserAsync(user);
+
+
+        return new TokenResult(
+            token,
+            refreshToken, 
+            DateTime.UtcNow.AddMinutes(_configuration.GetSection("Jwt:ExpiryMinutes").Get<double>()));
     }
 }

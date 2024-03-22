@@ -5,6 +5,7 @@ using Application.Authentication.Queries;
 using Domain.Entities;
 using Google.Apis.Auth;
 using MediatR;
+using Microsoft.Extensions.Configuration;
 
 
 namespace Application.Authentication.QueryHandlers;
@@ -13,12 +14,14 @@ public class GetUserRegisterInfoHandler : IRequestHandler<GetUserRegisterInfo, T
 {
     private readonly IUserRepository _userRepository;
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
+    private readonly IConfiguration _configuration;
 
 
-    public GetUserRegisterInfoHandler(IUserRepository userRepository, IJwtTokenGenerator jwtTokenGenerator)
+    public GetUserRegisterInfoHandler(IConfiguration configuration,IUserRepository userRepository, IJwtTokenGenerator jwtTokenGenerator)
     {
         _userRepository = userRepository;
         _jwtTokenGenerator = jwtTokenGenerator;
+        _configuration = configuration;
     }
 
     public async Task<TokenResult> Handle(GetUserRegisterInfo request, CancellationToken cancellationToken)
@@ -44,9 +47,13 @@ public class GetUserRegisterInfoHandler : IRequestHandler<GetUserRegisterInfo, T
         user.AddRefreshToken(
             RefreshToken.Create(refreshToken)
         );
+        
         await _userRepository.UpdateUserAsync(user);
 
 
-        return new TokenResult(token, refreshToken, DateTime.UtcNow.AddMinutes(480));
+        return new TokenResult(
+            token, 
+            refreshToken, 
+            DateTime.UtcNow.AddMinutes(_configuration.GetSection("Jwt:ExpiryMinutes").Get<double>()));
     }
 }

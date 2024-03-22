@@ -5,14 +5,17 @@ using Application.Abstractions.Authentication;
 using Application.Authentication;
 using Application.Authentication.Commands;
 using MediatR;
+using Microsoft.Extensions.Configuration;
 
 public class TokenRequestHandler : IRequestHandler<TokenRequestCommand, TokenResult>
 {
     private readonly IJwtTokenGenerator _jwtTokenGenerator;
+    private readonly IConfiguration _configuration;
     private readonly IUserRepository _userRepository;
-    public TokenRequestHandler(IJwtTokenGenerator jwtTokenGenerator, IUserRepository userRepository){
+    public TokenRequestHandler(IConfiguration configuration,IJwtTokenGenerator jwtTokenGenerator, IUserRepository userRepository){
         _jwtTokenGenerator = jwtTokenGenerator;
         _userRepository = userRepository;
+        _configuration = configuration;
     }
     public async Task<TokenResult> Handle(TokenRequestCommand request, CancellationToken cancellationToken)
     {
@@ -34,8 +37,6 @@ public class TokenRequestHandler : IRequestHandler<TokenRequestCommand, TokenRes
                 user.RemoveRefreshToken(r);
             }
         }
-
-
         
         //Console.WriteLine(request.refreshToken);
         var refreshToken = user.RefreshTokens.Where(r => r.Token == request.refreshToken).FirstOrDefault();
@@ -49,6 +50,9 @@ public class TokenRequestHandler : IRequestHandler<TokenRequestCommand, TokenRes
         refreshToken.Update(newRefreshToken);
 
         await _userRepository.UpdateUserAsync(user);
-        return new TokenResult(newAccessToken, newRefreshToken, DateTime.UtcNow.AddMinutes(480));
+        return new TokenResult(
+            newAccessToken, 
+            newRefreshToken, 
+            DateTime.UtcNow.AddMinutes(_configuration.GetSection("Jwt:ExpiryMinutes").Get<double>()));
     }
 }

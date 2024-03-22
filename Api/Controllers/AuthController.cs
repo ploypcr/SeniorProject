@@ -22,4 +22,11 @@ public class AuthController : ControllerBase{
         var token = await _mediator.Send(command);
         return Ok(token);
     }
+
+    [HttpPost("revoke-token")]
+    public async Task<IActionResult> RevokeToken(TokenRequest request){
+        var command  = new RevokeTokenCommand(request.accessToken , request.refreshToken);
+        await _mediator.Send(command);
+        return Ok(200);
+    }
 }
