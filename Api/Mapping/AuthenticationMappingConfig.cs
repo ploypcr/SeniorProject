@@ -12,10 +12,5 @@ public class AuthenticationMappingConfig : IRegister
     {
         config.NewConfig<RegisterRequest, RegisterCommand>().Map(dest => dest, src => src);
         config.NewConfig<LoginRequest, LoginQuery>().Map(dest => dest, src => src);
-        config.NewConfig<AuthenticationResult, AuthenticationResponse>()
-            .Map(dest => dest.FirstName, src => src.User.FirstName)
-            .Map(dest => dest.LastName, src => src.User.LastName)
-            .Map(dest => dest.Email, src => src.User.Email)
-            .Map(dest => dest.Token, src => src.Token);
     }
 }
