@@ -86,7 +86,7 @@ public static class DependencyInjection{
         return services;
     }
     public static IServiceCollection AddPersistence(this IServiceCollection services, ConfigurationManager configuration){
-        services.AddDbContext<HistoryTakingDb>(options => options.UseSqlServer(configuration.GetConnectionString("MSSQLDOCKER")));
+        services.AddDbContext<HistoryTakingDb>(options => options.UseSqlServer(configuration.GetConnectionString("MSSQL")));
         //services.AddHealthChecks().AddDbContextCheck<HistoryTakingDb>();
         //services.AddIdentityCore<User>().AddEntityFrameworkStores<HistoryTakingDb>();
         services.AddScoped<IQuestionRepository, QuestionRepository>();

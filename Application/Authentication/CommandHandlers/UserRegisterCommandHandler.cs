@@ -6,7 +6,7 @@ using Domain.Entities;
 using Google.Apis.Auth;
 using MediatR;
 using Microsoft.Extensions.Configuration;
-
+using BC = BCrypt.Net.BCrypt;
 namespace Application.Authentication.CommandHandlers;
 
 public class UserRegisterCommandHandler : IRequestHandler<UserRegisterCommand>
@@ -29,14 +29,21 @@ public class UserRegisterCommandHandler : IRequestHandler<UserRegisterCommand>
     {
         var user = await _userRepository.GetUserByEmailAsync(request.Email);
         if(user is not null){
-            throw new Exception("Already has this user.");
+            throw new ArgumentException("Already has this user.");
         }
 
+        string emailToken = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
+        var salt = BC.GenerateSalt(10);
+        var hashedPassword = BC.HashPassword(request.Password, salt);
+        
         user = User.Create(request.FirstName, 
-        request.LastName, request.StudentId, request.Email, request.Password);
+        request.LastName, request.StudentId, request.Email, hashedPassword, emailToken, false);
         await _userRepository.AddUserAsync(user);
 
-        await _emailService.SendEmail(request.Email, "Hello");
+        var body = "Please confirm your email address <a href=#URL#>Click here</a>";
+        var url = $"https://localhost:7197/api/confirmEmail?id={user.Id}&code={emailToken}";
+        body = body.Replace("#URL#", url);
+        await _emailService.SendEmail(request.Email, body);
 
         // var token = _jwtTokenGenerator.GenerateToken(user, "User");
         // var refreshToken = _jwtTokenGenerator.GenerateRefreshToken();

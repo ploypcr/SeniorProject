@@ -8,6 +8,9 @@ public class User{
 
     public string Email {get; private set;}
     public string? Password {get; private set;}
+    public string? EmailVerificationToken {get; private set;}
+    public bool EmailVerified {get; private set;}
+
     private readonly List<RefreshToken> _refreshTokens = new();
     public IReadOnlyList<RefreshToken> RefreshTokens => _refreshTokens.ToList();
 
@@ -17,7 +20,9 @@ public class User{
         string lastName,
         string studentId,
         string email,
-        string password
+        string password,
+        string token,
+        bool verified
     ){
         return new User{
             StudentId = studentId,
@@ -25,7 +30,9 @@ public class User{
             FirstName = firstName,
             LastName = lastName,
             Email = email,
-            Password = password
+            Password = password,
+            EmailVerificationToken = token,
+            EmailVerified = verified
         };
     }
 
@@ -38,5 +45,16 @@ public class User{
         RefreshToken refreshToken
     ){
         _refreshTokens.Remove(refreshToken);
+    }
+
+    public void UpdateVerified(
+    ){
+        EmailVerified = true;
+    }
+
+    public void UpdateEmailToken(
+        string token
+    ){
+        EmailVerificationToken = token;
     }
 }

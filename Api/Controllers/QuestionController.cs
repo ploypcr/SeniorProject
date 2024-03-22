@@ -79,7 +79,7 @@ public class QuestionController : ControllerBase
         List<ExaminationCommand> examinationCommands = new();
         var question = await _questionRepository.GetByIdAsync(new QuestionId(id));
         if (question == null){
-            throw new Exception("No question found.");
+            throw new ArgumentNullException("No question found.");
         }
         if(request.Examinations != null){
             foreach(QuestionExaminationRequest e in request.Examinations){

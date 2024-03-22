@@ -17,9 +17,9 @@ public class EmailService : IEmailService
         email.From.Add(new MailboxAddress("KU Vet Learning Lab", _configuration.GetSection("EmailConfig:Email").Value));
         email.To.Add(new MailboxAddress(To,To));
 
-        email.Subject = "Testing out email sending";
-        email.Body = new TextPart(MimeKit.Text.TextFormat.Plain) { 
-            Text = "Hello all the way from the land of C#"
+        email.Subject = "KU Vet Learning Lab Email Verification";
+        email.Body = new TextPart(MimeKit.Text.TextFormat.Html) { 
+            Text = body
         };
         using (var smtp = new SmtpClient())
         {

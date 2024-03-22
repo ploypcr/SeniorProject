@@ -25,11 +25,11 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, TokenResu
         var payload = await GoogleJsonWebSignature.ValidateAsync(request.Token);
         var user = await _userRepository.GetUserByEmailAsync(payload.Email);
         if(user is not null){
-            throw new Exception("Already has this user.");
+            throw new ArgumentException("Already has this user.");
         }
 
         user = User.Create(request.FirstName, 
-        request.LastName, request.StudentId, payload.Email, null);
+        request.LastName, request.StudentId, payload.Email, null, null, true);
         await _userRepository.AddUserAsync(user);
         
         var token = _jwtTokenGenerator.GenerateToken(user, "User");

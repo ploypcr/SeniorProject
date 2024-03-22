@@ -19,6 +19,19 @@ public class GlobalExceptionHandler : IExceptionHandler
         var result = new ProblemDetails();
         switch (exception)
         {
+            case ArgumentNullException argumentNullException:
+                result = new ProblemDetails
+                {
+                    Status = (int)HttpStatusCode.NotFound,
+                    Type = argumentNullException.GetType().Name,
+                    Title = "An unexpected error occurred",
+                    Detail = argumentNullException.Message,
+                    Instance = $"{httpContext.Request.Method} {httpContext.Request.Path}",
+                };
+                httpContext.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
+                _logger.LogError(argumentNullException, $"Exception occured : {argumentNullException.Message}");
+                break;
+                
             case ArgumentException argumentException:
                 result = new ProblemDetails
                 {
