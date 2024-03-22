@@ -31,8 +31,8 @@ public class TokenRequestHandler : IRequestHandler<TokenRequestCommand, TokenRes
         if(user == null){
             throw new InvalidCredentialException("Invalid token.");
         }
-
         foreach(var r in user.RefreshTokens){
+            //Console.WriteLine(r.Token);
             if(r.CreatedTime.AddDays(1) < DateTime.UtcNow){
                 user.RemoveRefreshToken(r);
             }
@@ -48,8 +48,8 @@ public class TokenRequestHandler : IRequestHandler<TokenRequestCommand, TokenRes
         var newRefreshToken = _jwtTokenGenerator.GenerateRefreshToken();
         var newAccessToken = _jwtTokenGenerator.GenerateToken(user, role);
         refreshToken.Update(newRefreshToken);
-
         await _userRepository.UpdateUserAsync(user);
+
         return new TokenResult(
             newAccessToken, 
             newRefreshToken, 
