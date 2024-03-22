@@ -15,7 +15,7 @@ public class CreateTreatmentHandler : IRequestHandler<CreateTreatmentCommand, Tr
 
     public async Task<Treatment> Handle(CreateTreatmentCommand request, CancellationToken cancellationToken)
     {
-        var treatment = await _treatmentRepository.GetByNameAsync(request.Name);
+        var treatment = await _treatmentRepository.GetByNameAndTypeAsync(request.Name, request.Type);
         if(treatment != null){
             throw new ArgumentException("Already has this treatment.");
         }

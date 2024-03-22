@@ -28,8 +28,8 @@ public class UpdateTreatmentHandler : IRequestHandler<UpdateTreatmentCommand, Tr
             throw new ArgumentException("No treatment found.");
         }
         treatment.Update(
-            request.Name, 
-            request.Type == null ? treatment.Type : request.Type,
+            treatment.Type, 
+            request.Name,
             request.Cost);
         var questions = await _questionRepository.GetByTreatmentAsync(request.TreatmentId);
 

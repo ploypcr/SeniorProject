@@ -254,7 +254,7 @@ public class FileStorageService : IFileStorageService{
                     var treatments = treatment_types.Zip(treatment_names, (t,n) => new { Type = t, Name = n});
                     List<TreatmentCommand> treatmentCommands = new();
                     foreach(var t in treatments){
-                        var treatment = await _treatmentRepository.GetByNameAsync(t.Name);
+                        var treatment = await _treatmentRepository.GetByNameAndTypeAsync(t.Name, t.Type);
                         if(treatment == null){
                             throw new ArgumentException("No treatment found.");
                         }

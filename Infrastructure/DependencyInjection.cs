@@ -97,6 +97,8 @@ public static class DependencyInjection{
         services.AddScoped<IExaminationRepository,ExaminationRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
         services.AddScoped<IStatsRepository, StatsRepository>();
+        services.AddScoped<IEmailService, EmailService>();
+
         services.AddExceptionHandler<GlobalExceptionHandler>();
         services.AddProblemDetails();
 

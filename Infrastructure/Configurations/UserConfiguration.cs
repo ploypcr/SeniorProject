@@ -10,6 +10,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
     {
         builder.HasKey(t => t.Id);
 
+        builder.HasData(
+            User.Create("Admin", "", "9999","admin1", "uC0vpYkNjo4q8C5")
+        );
         builder.HasMany(u => u.RefreshTokens).WithOne();
 
     }

@@ -23,6 +23,20 @@ public class AuthController : ControllerBase{
         return Ok(token);
     }
 
+    [HttpPost("user-register")]
+    public async Task<IActionResult> RegisterUser(UserRegisterRequest request){
+        var command  = new UserRegisterCommand(request.FirstName , request.LastName, request.StudentId, request.Email, request.Password);
+        await _mediator.Send(command);
+        return Ok("Sent to email successfully");
+    }
+
+    [HttpPost("user-login")]
+    public async Task<IActionResult> LoginUser(LoginRequest request){
+        var command  = new UserLogin(request.UserName , request.Password);
+        var token = await _mediator.Send(command);
+        return Ok(token);
+    }
+
     [HttpPost("revoke-token")]
     public async Task<IActionResult> RevokeToken(TokenRequest request){
         var command  = new RevokeTokenCommand(request.accessToken , request.refreshToken);
