@@ -1,4 +1,3 @@
-using Domain.Entities;
 
 namespace Application.Authentication;
 public record TokenResult(

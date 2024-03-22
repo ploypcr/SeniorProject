@@ -6,14 +6,13 @@ using Application.Student.Commands;
 using Application.Student.Queries;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
-using Contracts.Question;
 using Contracts.Treatment;
 using Contracts.Diagnostic;
-using Application.Authentication.Queries;
 namespace Api.Controllers;
+
 [ApiController]
 [Route("api/[controller]")]
-[Authorize(Roles = "User")]
+[Authorize(Roles = "Admin,User")]
 public class StudentController : ControllerBase{
     private readonly IMapper _mapper;
     private readonly IMediator _mediator;
@@ -56,7 +55,7 @@ public class StudentController : ControllerBase{
     public async Task<IActionResult> GetAllQuestionStatsInStudent(){
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         var getQuestionStatsResult = await _mediator.Send(new GetAllQuestionStatsInStudent(userId));
-        //Console.WriteLine(getQuestionStatsResult[0].StudentStats.Problem1_Score);
+
         List<QuestionStatsResponse> questionStatsResponses = new();
         foreach(var q in getQuestionStatsResult){
             questionStatsResponses.Add(new QuestionStatsResponse(

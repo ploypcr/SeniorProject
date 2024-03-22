@@ -1,5 +1,4 @@
 using Application.Authentication.Commands;
-using Application.Authentication.Queries;
 using Contracts.Authentication;
 using MapsterMapper;
 using MediatR;

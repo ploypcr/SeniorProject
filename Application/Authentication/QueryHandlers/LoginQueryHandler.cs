@@ -1,4 +1,3 @@
-using System.Security.Authentication;
 using Application.Abstractions;
 using Application.Abstractions.Authentication;
 using Application.Authentication.Queries;

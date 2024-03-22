@@ -4,7 +4,6 @@ using Application.Abstractions;
 using Application.Abstractions.Authentication;
 using Application.Authentication;
 using Application.Authentication.Commands;
-using Domain.Entities;
 using MediatR;
 
 public class TokenRequestHandler : IRequestHandler<TokenRequestCommand, TokenResult>

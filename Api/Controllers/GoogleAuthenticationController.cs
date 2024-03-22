@@ -1,12 +1,9 @@
-using System.Security.Authentication.ExtendedProtection;
 using Application.Authentication.Commands;
 using Application.Authentication.Queries;
 using Contracts.Authentication;
-using Domain.Entities;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers;

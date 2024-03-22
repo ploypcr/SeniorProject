@@ -1,8 +1,6 @@
 using Application.Diagnostics.Commands;
 using Application.Diagnostics.Queries;
-
 using Contracts.Diagnostic;
-
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;

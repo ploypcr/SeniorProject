@@ -1,10 +1,6 @@
-using Application.Questions.Commands;
-using Application.Questions.Queries;
 using Application.Treatments.Commands;
 using Application.Treatments.Queries;
-using Contracts.Examination;
 using Contracts.Treatment;
-using Domain.Entities;
 using MapsterMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;

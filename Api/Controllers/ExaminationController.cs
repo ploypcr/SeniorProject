@@ -1,10 +1,7 @@
-using System;
 using Application.Abstractions;
 using Application.Abstractions.Services;
 using Application.Examinations.Commands;
 using Application.Examinations.Queries;
-using Application.Questions.Commands;
-using Application.Questions.Queries;
 using Contracts.Examination;
 using Domain.Entities;
 using MapsterMapper;
