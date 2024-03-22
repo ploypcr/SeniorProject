@@ -22,12 +22,19 @@ public class AuthController : ControllerBase{
         var token = await _mediator.Send(command);
         return Ok(token);
     }
+    
+    [HttpPost("revoke-token")]
+    public async Task<IActionResult> RevokeToken(TokenRequest request){
+        var command  = new RevokeTokenCommand(request.accessToken , request.refreshToken);
+        await _mediator.Send(command);
+        return Ok(200);
+    }
 
     [HttpPost("user-register")]
     public async Task<IActionResult> RegisterUser(UserRegisterRequest request){
         var command  = new UserRegisterCommand(request.FirstName , request.LastName, request.StudentId, request.Email, request.Password);
         await _mediator.Send(command);
-        return Ok("Sent to email successfully");
+        return Ok(200);
     }
 
     [HttpPost("user-login")]
@@ -37,17 +44,16 @@ public class AuthController : ControllerBase{
         return Ok(token);
     }
 
-    [HttpPost("revoke-token")]
-    public async Task<IActionResult> RevokeToken(TokenRequest request){
-        var command  = new RevokeTokenCommand(request.accessToken , request.refreshToken);
+    [HttpGet("confirmEmail")]
+    public async Task<IActionResult> EmailConfirm([FromQuery] string id, [FromQuery] string code){
+        var command  = new ConfirmEmailCommand(id , code);
         await _mediator.Send(command);
         return Ok(200);
     }
 
-    [HttpGet("confirmEmail")]
-    public async Task<IActionResult> EmailConfirm([FromQuery] string id, [FromQuery] string code){
-        Console.WriteLine(id, code);
-        var command  = new ConfirmEmailCommand(id , code);
+    [HttpPost("resend-email")]
+    public async Task<IActionResult> ResendEmail(ResendEmailRequest request){
+        var command  = new ResendEmailCommand(request.Email);
         await _mediator.Send(command);
         return Ok(200);
     }

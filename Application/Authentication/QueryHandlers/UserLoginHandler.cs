@@ -46,7 +46,7 @@ public class UserLoginHandler : IRequestHandler<UserLogin, TokenResult>
             await _userRepository.UpdateUserAsync(user);
             await _emailService.SendEmail(user.Email, user.Id, emailToken);
 
-            throw new ArgumentException("Please confirm your email first. we have resend an link to your email.");
+            throw new ArgumentException("Please confirm your email first. we resend a link to your email.");
         }
 
         foreach(var r in user.RefreshTokens){
@@ -58,6 +58,8 @@ public class UserLoginHandler : IRequestHandler<UserLogin, TokenResult>
 
         var token = _jwtTokenGenerator.GenerateToken(user, "User");
         var refreshToken = _jwtTokenGenerator.GenerateRefreshToken();
+        refreshToken = refreshToken.Replace("=","");
+        refreshToken = refreshToken.Replace("+","");
         
         var userRefreshToken = RefreshToken.Create(refreshToken);
         user.AddRefreshToken(userRefreshToken);
