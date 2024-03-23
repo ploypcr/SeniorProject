@@ -144,19 +144,84 @@ public class FileStorageService : IFileStorageService{
                 //     Console.WriteLine(k);
                 // }
                 // Console.WriteLine(worksheet.Dimension.End.Row);
+                string[] columnName1 = {
+                    "เลขข้อ (*)", 
+                    "ประเภท (ใส่ได้แค่ สุนัข, แมว, นก เท่านั้น) (*)", 
+                    "สายพันธุ์ (*)",
+                    "เพศ (ใส่แค่ ผู้/เมีย เท่านั้น) (*)",
+                    "ทำหมัน (ใส่แค่ y/n) (*)",
+                    "อายุ (*)",
+                    "น้ำหนัก (*)",
+                    "Client complains (*)",
+                    "History taking (*)",
+                    "ผลตรวจทั่วไป (คั่นด้วยเครื่องหมาย , ) (*)",
+                    "Problem List 1 (คั่นด้วยเครื่องหมาย , ) (*)",
+                    "Differential Diagnosis (คั่นด้วยเครื่องหมาย , ) (*)",
+                    "จำนวนการส่งตรวจ 1 (ใส่แค่ตัวเลข ถ้าไม่มีให้ใส่ 0) (*)",
+                    "แผนกการส่งตรวจ 1 (*)",
+                    "หัวข้อการส่งตรวจ 1 (*)",
+                    "ชื่อการส่งตรวจ 1 (*)",
+                    "ตัวอย่างที่นำไปส่งตรวจ 1 (Optional)",
+                    "ผลการส่งตรวจ 1 (Text) (Optional)",
+                    "ผลการส่งตรวจ 1 (รูปภาพ) (Optional)",
+                    "Problem List 2 (คั่นด้วย , ) (*)",
+                    "Tentative/Definitive Diagnosis (คั่นด้วยเครื่องหมาย , ) (*)",
+                    "ประเภท Treatment (คั่นด้วยเครื่องหมาย , ) (*)",
+                    "ชื่อ Treatment (คั่นด้วยเครื่องหมาย , ) (*)",
+                    "Tag ที่เกี่ยวข้อง (คั่นด้วยเครื่องหมาย , ) (*)"
+                };
+
+                for(int k = 0; k < columnName1.Length;k++){
+                    if(worksheet.Cells[1,k+1].Value == null){
+                        throw new ArgumentException("Wrong excel file.");
+                    }
+                    if(worksheet.Cells[1,k+1].GetValue<string>() != columnName1[k]) {
+                        throw new ArgumentException("Wrong excel file.");
+                    }
+                }
+
                 for(;!emptyRow;){
-                    if(worksheet.Cells[i,1].Value == null && worksheet.Cells[i,13].Value == null){
+                    if(worksheet.Cells[i,1].Value == null
+                    && worksheet.Cells[i,2].Value == null
+                    && worksheet.Cells[i,3].Value == null 
+                    && worksheet.Cells[i,4].Value == null
+                    && worksheet.Cells[i,5].Value == null
+                    && worksheet.Cells[i,6].Value == null
+                    && worksheet.Cells[i,7].Value == null
+                    && worksheet.Cells[i,8].Value == null
+                    && worksheet.Cells[i,9].Value == null
+                    && worksheet.Cells[i,10].Value == null
+                    && worksheet.Cells[i,11].Value == null
+                    && worksheet.Cells[i,12].Value == null
+                    && worksheet.Cells[i,13].Value == null
+                    && worksheet.Cells[i,14].Value == null
+                    && worksheet.Cells[i,15].Value == null
+                    && worksheet.Cells[i,16].Value == null
+                    && worksheet.Cells[i,17].Value == null
+                    && worksheet.Cells[i,18].Value == null
+                    && worksheet.Cells[i,19].Value == null
+                    && worksheet.Cells[i,20].Value == null
+                    && worksheet.Cells[i,21].Value == null
+                    && worksheet.Cells[i,22].Value == null
+                    && worksheet.Cells[i,23].Value == null
+                    && worksheet.Cells[i,24].Value == null
+                    ){
                         emptyRow=true;
                         //Console.WriteLine("y");
                         continue;
                     }
-                    var signalment_species = worksheet.Cells[i,2].Value != null ? worksheet.Cells[i,2].GetValue<string>() : null;
-                    var signalment_breed = worksheet.Cells[i,3].Value != null ? worksheet.Cells[i,3].GetValue<string>() : null;
-                    var signalment_gender = worksheet.Cells[i,4].Value != null ? worksheet.Cells[i,4].GetValue<string>() : null;
+                    var signalment_species = worksheet.Cells[i,2].GetValue<string>();
+                    if(signalment_species != null){
+                        if(signalment_species != "สุนัข" || signalment_species != "นก" || signalment_species != "แมว"){
+                            throw new ArgumentException("Wrong signalment species.");
+                        }
+                    }
+                    var signalment_breed = worksheet.Cells[i,3].GetValue<string>();
+                    var signalment_gender = worksheet.Cells[i,4].GetValue<string>();
                     
-                    var signalment_sterilize = worksheet.Cells[i,5].Value != null ? worksheet.Cells[i,5].GetValue<string>() : "";
-                    var signalment_age = worksheet.Cells[i,6].Value != null ? worksheet.Cells[i,6].GetValue<string>() : null;
-                    var signalment_weight = worksheet.Cells[i,7].Value != null ? worksheet.Cells[i,7].GetValue<string>() : null;
+                    var signalment_sterilize = worksheet.Cells[i,5].GetValue<string>();
+                    var signalment_age = worksheet.Cells[i,6].GetValue<string>();
+                    var signalment_weight = worksheet.Cells[i,7].GetValue<string>();
                     SignalmentCommand signalment = new SignalmentCommand(
                         signalment_species,
                         signalment_breed,
@@ -204,7 +269,7 @@ public class FileStorageService : IFileStorageService{
                         var examination1_name = worksheet.Cells[j,16].GetValue<string>();
                         var examination1_area = worksheet.Cells[j,17].GetValue<string>();
                         var examination1_text = worksheet.Cells[j,18].GetValue<string>();
-                        var examination1 = await _examinationRepository.GetByDetails(examination1_name, examination1_type == string.Empty ? null : examination1_type, examination1_lab, examination1_area == string.Empty ? null : examination1_area);
+                        var examination1 = await _examinationRepository.GetByDetails(examination1_name, examination1_type == string.Empty ? examination1_lab : examination1_type, examination1_lab, examination1_area == string.Empty ? null : examination1_area);
                         if(examination1 == null){
                             throw new ArgumentException("Examination not found");
                         }
@@ -314,8 +379,10 @@ public class FileStorageService : IFileStorageService{
         ExcelPackage excel = new ExcelPackage(); 
   
         var workSheet1 = excel.Workbook.Worksheets.Add("Template"); 
-        workSheet1.DefaultColWidth = 40;
+        workSheet1.DefaultColWidth = 60;
+        workSheet1.DefaultColWidth = 30;
 
+        
         var workSheet2 = excel.Workbook.Worksheets.Add("Problem List"); 
         workSheet2.DefaultColWidth = 30;
 
@@ -331,35 +398,116 @@ public class FileStorageService : IFileStorageService{
         var workSheet6 = excel.Workbook.Worksheets.Add("Tag List"); 
         workSheet6.DefaultColWidth = 30;
 
+        var workSheet7 = excel.Workbook.Worksheets.Add("Example");
+        workSheet7.DefaultColWidth = 60;
+        workSheet7.DefaultRowHeight = 30;
+
 
         string[] columnName1 = {
-                "เลขข้อ", 
-                "ประเภท (ใส่ได้แค่ สุนัข, แมว, นก)", 
-                "สายพันธุ์",
-                "เพศ (ใส่แค่ ผู้/เมีย)",
-                "ทำหมัน (ใส่แค่ y/n)",
-                "อายุ",
-                "น้ำหนัก",
-                "Client complains",
-                "History taking",
-                "ผลตรวจทั่วไป (คั่นด้วยเครื่องหมาย , )",
-                "Problem List 1 (คั่นด้วยเครื่องหมาย , )",
-                "Differential Diagnosis (คั่นด้วยเครื่องหมาย , )",
-                "จำนวนการส่งตรวจ 1 (ใส่แค่ตัวเลข)",
-                "แผนกการส่งตรวจ 1",
-                "หัวข้อการส่งตรวจ 1 (Optional)",
-                "ชื่อการส่งตรวจ 1",
+                "เลขข้อ (*)", 
+                "ประเภท (ใส่ได้แค่ สุนัข, แมว, นก เท่านั้น) (*)", 
+                "สายพันธุ์ (*)",
+                "เพศ (ใส่แค่ ผู้/เมีย เท่านั้น) (*)",
+                "ทำหมัน (ใส่แค่ y/n) (*)",
+                "อายุ (*)",
+                "น้ำหนัก (*)",
+                "Client complains (*)",
+                "History taking (*)",
+                "ผลตรวจทั่วไป (คั่นด้วยเครื่องหมาย , ) (*)",
+                "Problem List 1 (คั่นด้วยเครื่องหมาย , ) (*)",
+                "Differential Diagnosis (คั่นด้วยเครื่องหมาย , ) (*)",
+                "จำนวนการส่งตรวจ 1 (ใส่แค่ตัวเลข ถ้าไม่มีให้ใส่ 0) (*)",
+                "แผนกการส่งตรวจ 1 (*)",
+                "หัวข้อการส่งตรวจ 1 (*)",
+                "ชื่อการส่งตรวจ 1 (*)",
                 "ตัวอย่างที่นำไปส่งตรวจ 1 (Optional)",
-                "ผลการส่งตรวจ 1 (Text)",
-                "ผลการส่งตรวจ 1 (รูปภาพ) (ถ้ามี)",
-                "Problem List 2 (คั่นด้วย , )",
-                "Tentative/Definitive Diagnosis (คั่นด้วยเครื่องหมาย , )",
-                "ประเภท Treatment (คั่นด้วยเครื่องหมาย , )",
-                "ชื่อ Treatment (คั่นด้วยเครื่องหมาย , )",
-                "Tag ที่เกี่ยวข้อง (คั่นด้วยเครื่องหมาย , )"
-
+                "ผลการส่งตรวจ 1 (Text) (Optional)",
+                "ผลการส่งตรวจ 1 (รูปภาพ) (Optional)",
+                "Problem List 2 (คั่นด้วย , ) (*)",
+                "Tentative/Definitive Diagnosis (คั่นด้วยเครื่องหมาย , ) (*)",
+                "ประเภท Treatment (คั่นด้วยเครื่องหมาย , ) (*)",
+                "ชื่อ Treatment (คั่นด้วยเครื่องหมาย , ) (*)",
+                "Tag ที่เกี่ยวข้อง (คั่นด้วยเครื่องหมาย , ) (*)"
         };
 
+        string[] example1 = {
+                "1", 
+                "สุนัข", 
+                "American Bully",
+                "ผู้",
+                "y",
+                "5 ปี",
+                "5 kg",
+                "xxxxx",
+                "xxxxx",
+                "xxx, yyy, zzz",
+                "prob 1, prob 2 , prob 3, ...",
+                "diff diag 1, diff diag 2, ...",
+                "2",
+                "lab 1",
+                "",
+                "name 1",
+                "",
+                "",
+                "",
+                "prob 4, prob 5, prob 6",
+                "ten diag 1, ten diag 2, ten diag 3",
+                "medical, nutritional support, medical",
+                "aaa, bbb, ccc",
+                "สุนัข, ปี 2"
+        };
+        string[] example2 = {
+                "", 
+                "", 
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "lab 2",
+                "type 1",
+                "name 1",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                "",
+                ""
+        };
+        string[] example3 = {
+                "2", 
+                "แมว", 
+                "วิเชียรมาศ",
+                "เมีย",
+                "n",
+                "5 ปี",
+                "5 kg",
+                "xxxxx",
+                "xxxxx",
+                "xxx, yyy, zzz",
+                "prob 1, prob 2 , prob 3, ...",
+                "diff diag 1, diff diag 2, ...",
+                "1",
+                "lab 3",
+                "type 1",
+                "name 1",
+                "area 1",
+                "xxxx",
+                "",
+                "prob 4, prob 5, prob 6",
+                "ten diag 1, ten diag 2, ten diag 3",
+                "medical, nutritional support, medical",
+                "aaa, bbb, ccc",
+                "แมว, ปี 3, ยาก"
+        };
         string[] columnName2 = {
             "ชื่อ Problem"
         };
@@ -381,7 +529,6 @@ public class FileStorageService : IFileStorageService{
         string[] columnName6 = {
             "ชื่อ Tag"
         };
-
         for (int i = 0; i < columnName1.Length; i++)
         {
             workSheet1.Cells[1, i+1].Value = columnName1[i];
@@ -412,6 +559,17 @@ public class FileStorageService : IFileStorageService{
             workSheet6.Cells[1, i+1].Value = columnName6[i];
         }
 
+        workSheet1.Cells[2, 1].Value = "กรุณาใส่ให้ครบทุก column ที่มีเครื่องหมาย (*) ข้อมูล Predefined ที่นำมาใส่ต้องนำมาจากใน sheet อื่นๆที่ให้มาเท่านั้น สามารถดูตัวอย่างการใส่ข้อมูลได้ที่ example sheet ";
+        
+        for (int i = 0; i < columnName1.Length; i++)
+        {
+            workSheet7.Cells[1, i+1].Value = columnName1[i];
+            workSheet7.Cells[2, i+1].Value = example1[i];
+            workSheet7.Cells[3, i+1].Value = example2[i];
+            workSheet7.Cells[4, i+1].Value = example3[i];
+        }
+
+        workSheet7.Cells[5, 1].Value = "** ข้อมูลที่ให้มาเป็นข้อมูลที่สมมติขึ้นมาเบื้องต้น **";
 
         //problem
         var problems = await _problemRepository.GetAllProblemsAsync();
@@ -436,7 +594,7 @@ public class FileStorageService : IFileStorageService{
         
         var diagnostics = await _diagnosticRepository.GetAllDiagnosticsAsync();
         for(int i = 0;i < diagnostics.Count;i++){
-            workSheet5.Cells[i+2,1].Value = diagnostics[i].Type == "tentative" ?"Tentative":"Differential";
+            workSheet5.Cells[i+2,1].Value = diagnostics[i].Type == "tentative" ?"ะentative":"differential";
             workSheet5.Cells[i+2,2].Value = diagnostics[i].Name;
 
         }
