@@ -2,6 +2,7 @@ using Application.Abstractions;
 using Application.Student.Commands;
 using Domain.Entities;
 using MediatR;
+using Microsoft.VisualBasic;
 
 namespace Application.Student.CommandHandlers;
 
@@ -37,11 +38,22 @@ public class CreateStudentStatsCommandHandler : IRequestHandler<CreateStudentSta
         //Console.WriteLine(request.Problems);
 
         double problems1_score = 0;
+        double wrong_problem1 = 0;
+
         double problems2_score = 0;
+        double wrong_problem2 = 0;
+
         double examinations_score = 0;
+        double wrong_exam = 0;
+
         double treatment_score = 0;
+        double wrong_treatment = 0;
         double diff_diagnostic_score = 0;
+        double wrong_diff = 0;
+
         double ten_diagnostic_score = 0;
+        double wrong_ten = 0;
+
 
 
         foreach(var p in request.Problems){
@@ -54,6 +66,13 @@ public class CreateStudentStatsCommandHandler : IRequestHandler<CreateStudentSta
                 }
                 else{
                     problems2_score++;
+                }
+            }else{
+                if(p.Round == 1){
+                    wrong_problem1++;
+                }
+                else{
+                    wrong_problem2++;
                 }
             }
             studentSelection.AddProblem(
@@ -68,6 +87,8 @@ public class CreateStudentStatsCommandHandler : IRequestHandler<CreateStudentSta
             }
             if(question.Examinations.Any(qe => qe.ExaminationId == new ExaminationId(new Guid(e.Id)))){
                 examinations_score++;
+            }else{
+                wrong_exam++;
             }
             studentSelection.AddExamination(
                 new ExaminationId(new Guid(e.Id))
@@ -87,6 +108,13 @@ public class CreateStudentStatsCommandHandler : IRequestHandler<CreateStudentSta
                     diff_diagnostic_score++;
                 }
                 
+            }else{
+                if(diagnostic.Type == "tentative"){
+                    wrong_ten++;
+                }
+                if(diagnostic.Type == "differential"){
+                    wrong_diff++;
+                }
             }
             studentSelection.AddDiagnostic(
                 diagnostic
@@ -100,6 +128,8 @@ public class CreateStudentStatsCommandHandler : IRequestHandler<CreateStudentSta
             if(question.Treatments.Any(qt => qt.Id == new TreatmentId(new Guid(t.Id)))){
                 treatment_score++;
                 
+            }else{
+                wrong_treatment++;
             }
             studentSelection.AddTreatment(
                 treatment
@@ -107,12 +137,22 @@ public class CreateStudentStatsCommandHandler : IRequestHandler<CreateStudentSta
         }
 
         problems1_score = (problems1_score/question.Problems.Where(p => p.Round == 1).Count())*12.5*(request.HeartProblem1/5);
-        problems2_score = (problems2_score/question.Problems.Where(p => p.Round == 2).Count())*12.5*(request.HeartProblem2/5);
-        examinations_score = (examinations_score/question.Examinations.Count())*12.5;
-        treatment_score = (treatment_score/question.Treatments.Count())*25;
-        diff_diagnostic_score = (diff_diagnostic_score/question.Diagnostics.Where(d => d.Type == "differential").Count())*25;
-        ten_diagnostic_score = (ten_diagnostic_score/question.Diagnostics.Where(d => d.Type == "tentative").Count())*25;
+        problems1_score -= 12.5/question.Problems.Where(p => p.Round == 1).Count()*0.5*wrong_problem1;
 
+        problems2_score = (problems2_score/question.Problems.Where(p => p.Round == 2).Count())*12.5*(request.HeartProblem2/5);
+        problems2_score -= 12.5/question.Problems.Where(p => p.Round == 2).Count()*0.5*wrong_problem2;
+
+        examinations_score = (examinations_score/question.Examinations.Count())*25;
+        examinations_score -= 25/question.Examinations.Count()*0.5*wrong_exam;
+
+        treatment_score = (treatment_score/question.Treatments.Count())*25;
+        treatment_score -= 25/question.Treatments.Count()*0.5*wrong_treatment;
+
+        diff_diagnostic_score = (diff_diagnostic_score/question.Diagnostics.Where(d => d.Type == "differential").Count())*25;
+        diff_diagnostic_score -= 12.5*question.Diagnostics.Where(d => d.Type == "differential").Count()*0.5*wrong_diff;
+
+        ten_diagnostic_score = (ten_diagnostic_score/question.Diagnostics.Where(d => d.Type == "tentative").Count())*25;
+        ten_diagnostic_score -= 12.5*question.Diagnostics.Where(d => d.Type == "tentative").Count()*0.5*wrong_ten;
 
         studentSelection.SetScore(
             problems1_score,
