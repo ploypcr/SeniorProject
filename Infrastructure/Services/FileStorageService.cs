@@ -181,38 +181,18 @@ public class FileStorageService : IFileStorageService{
                 }
 
                 for(;!emptyRow;){
-                    if(worksheet.Cells[i,1].Value == null
-                    && worksheet.Cells[i,2].Value == null
-                    && worksheet.Cells[i,3].Value == null 
-                    && worksheet.Cells[i,4].Value == null
-                    && worksheet.Cells[i,5].Value == null
-                    && worksheet.Cells[i,6].Value == null
-                    && worksheet.Cells[i,7].Value == null
-                    && worksheet.Cells[i,8].Value == null
-                    && worksheet.Cells[i,9].Value == null
-                    && worksheet.Cells[i,10].Value == null
-                    && worksheet.Cells[i,11].Value == null
-                    && worksheet.Cells[i,12].Value == null
-                    && worksheet.Cells[i,13].Value == null
-                    && worksheet.Cells[i,14].Value == null
-                    && worksheet.Cells[i,15].Value == null
-                    && worksheet.Cells[i,16].Value == null
-                    && worksheet.Cells[i,17].Value == null
-                    && worksheet.Cells[i,18].Value == null
-                    && worksheet.Cells[i,19].Value == null
-                    && worksheet.Cells[i,20].Value == null
-                    && worksheet.Cells[i,21].Value == null
-                    && worksheet.Cells[i,22].Value == null
-                    && worksheet.Cells[i,23].Value == null
-                    && worksheet.Cells[i,24].Value == null
-                    ){
-                        emptyRow=true;
-                        //Console.WriteLine("y");
+                    emptyRow = true;
+                    for(int r = 1;r <= 24;r++){
+                        if(worksheet.Cells[i,r].Value != null){
+                            emptyRow = false;
+                        }
+                    }
+                    if(emptyRow){
                         continue;
                     }
                     var signalment_species = worksheet.Cells[i,2].GetValue<string>();
                     if(signalment_species != null){
-                        if(signalment_species != "สุนัข" || signalment_species != "นก" || signalment_species != "แมว"){
+                        if(signalment_species != "สุนัข" && signalment_species != "นก" && signalment_species != "แมว"){
                             throw new ArgumentException("Wrong signalment species.");
                         }
                     }
@@ -230,10 +210,10 @@ public class FileStorageService : IFileStorageService{
                         signalment_age,
                         signalment_weight
                     );
-                    var client_complains = worksheet.Cells[i,8].Value != null ? worksheet.Cells[i,8].GetValue<string>() : null;
-                    var historytaking_info = worksheet.Cells[i,9].Value != null ? worksheet.Cells[i,9].GetValue<string>() :null;
-                    var general_info = worksheet.Cells[i,10].Value != null ? worksheet.Cells[i,10].GetValue<string>():null;
-                    var problems_1 = worksheet.Cells[i,11].Value != null ? worksheet.Cells[i,11].GetValue<string>().Split(",").Select(t => t.Trim()).ToList() : [];
+                    var client_complains =  worksheet.Cells[i,8].GetValue<string>() ;
+                    var historytaking_info =  worksheet.Cells[i,9].GetValue<string>() ;
+                    var general_info = worksheet.Cells[i,10].GetValue<string>();
+                    var problems_1 = worksheet.Cells[i,11].GetValue<string>().Split(",").Select(t => t.Trim()).ToList();
 
                     List<ProblemCommand> problemCommands = new();
                     foreach(string name in problems_1){
@@ -246,7 +226,7 @@ public class FileStorageService : IFileStorageService{
                         }
                     }
 
-                    var diff_diagnostics = worksheet.Cells[i,12].Value != null ? worksheet.Cells[i,12].GetValue<string>().Split(",").Select(t => t.Trim()).ToList() : [];
+                    var diff_diagnostics = worksheet.Cells[i,12].GetValue<string>().Split(",").Select(t => t.Trim()).ToList() ;
                     //var ten_diagnostics = worksheet.Cells[i,20].GetValue<string>().Split(",").Select(t => t.Trim()).ToList();
 
                     List<DiagnosticCommand> diagnosticCommands = new();
@@ -277,7 +257,7 @@ public class FileStorageService : IFileStorageService{
                         //var examination1_img = string.Empty;
                         if(lookUpDrawing.Contains(lookUpKey))
                         {
-                            Console.WriteLine($"******************\n{lookUpKey}\n***********\n");
+                            //Console.WriteLine($"******************\n{lookUpKey}\n***********\n");
                             ExcelPicture excel_image = lookUpDrawing[lookUpKey].ToList()[0] as ExcelPicture;
                             var imageBytes = excel_image.Image.ImageBytes;
                             //Console.WriteLine(imageBytes);
@@ -296,7 +276,7 @@ public class FileStorageService : IFileStorageService{
                         }
                     }
 
-                    var problems_2 = worksheet.Cells[i,20].Value != null ? worksheet.Cells[i,20].GetValue<string>().Split(",").Select(t => t.Trim()).ToList() : [];
+                    var problems_2 = worksheet.Cells[i,20].GetValue<string>().Split(",").Select(t => t.Trim()).ToList();
                     foreach(string name in problems_2){
                         if(name != ""){
                             var p = await _problemRepository.GetByNameAsync(name);
@@ -310,7 +290,7 @@ public class FileStorageService : IFileStorageService{
                         }
                     }
 
-                    var ten_diagnostics = worksheet.Cells[i,21].Value != null ? worksheet.Cells[i,21].GetValue<string>().Split(",").Select(t => t.Trim()).ToList() : [];
+                    var ten_diagnostics = worksheet.Cells[i,21].GetValue<string>().Split(",").Select(t => t.Trim()).ToList();
                     foreach(string name in ten_diagnostics){
                         if(name != ""){
                             var d = await _diagnosticRepository.GetByNameAndTypeAsync(name,"Tentative");
@@ -321,8 +301,8 @@ public class FileStorageService : IFileStorageService{
                         }
                     }
 
-                    var treatment_types = worksheet.Cells[i,22].Value != null ? worksheet.Cells[i,22].GetValue<string>().Split(",").Select(t => t.Trim()).ToList() : [];
-                    var treatment_names = worksheet.Cells[i,23].Value != null ? worksheet.Cells[i,23].GetValue<string>().Split(",").Select(t => t.Trim()).ToList() : [];
+                    var treatment_types = worksheet.Cells[i,22].GetValue<string>().Split(",").Select(t => t.Trim()).ToList() ;
+                    var treatment_names = worksheet.Cells[i,23].GetValue<string>().Split(",").Select(t => t.Trim()).ToList() ;
                     if(treatment_names.Count != treatment_types.Count){
                         throw new ArgumentException("Treatment type and name size not equal.");
                     }
@@ -559,7 +539,7 @@ public class FileStorageService : IFileStorageService{
             workSheet6.Cells[1, i+1].Value = columnName6[i];
         }
 
-        workSheet1.Cells[2, 1].Value = "กรุณาใส่ให้ครบทุก column ที่มีเครื่องหมาย (*) ข้อมูล Predefined ที่นำมาใส่ต้องนำมาจากใน sheet อื่นๆที่ให้มาเท่านั้น สามารถดูตัวอย่างการใส่ข้อมูลได้ที่ example sheet ";
+        workSheet1.Cells[2, 1].Value = "กรุณาใส่ให้ครบทุก column ที่มีเครื่องหมาย (*) ข้อมูล Predefined ที่นำมาใส่ต้องนำมาจากใน sheet อื่นๆที่ให้มาเท่านั้น สามารถดูตัวอย่างการใส่ข้อมูลได้ที่ example sheet โจทย์ที่จะถูกเพิ่มเข้ามาจะถูกจัดอยู่ในโหมด draft โปรดเข้าไปตรวจสอบและเช็คก่อนเผยแพร่";
         
         for (int i = 0; i < columnName1.Length; i++)
         {
@@ -594,7 +574,7 @@ public class FileStorageService : IFileStorageService{
         
         var diagnostics = await _diagnosticRepository.GetAllDiagnosticsAsync();
         for(int i = 0;i < diagnostics.Count;i++){
-            workSheet5.Cells[i+2,1].Value = diagnostics[i].Type == "tentative" ?"ะentative":"differential";
+            workSheet5.Cells[i+2,1].Value = diagnostics[i].Type == "tentative" ?"tentative":"differential";
             workSheet5.Cells[i+2,2].Value = diagnostics[i].Name;
 
         }
