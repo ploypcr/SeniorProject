@@ -34,7 +34,7 @@ public class DiagnosticRepository : IDiagnosticRepository
 
     public async Task<Diagnostic?> GetByNameAndTypeAsync(string name, string type)
     {
-        return await _context.Diagnostics.FirstOrDefaultAsync(diagnostic => diagnostic.Name == name && diagnostic.Type == type);
+        return await _context.Diagnostics.FirstOrDefaultAsync(diagnostic => diagnostic.Name.ToLower() == name.ToLower() && diagnostic.Type.ToLower() == type.ToLower());
     }
 
     public async Task UpdateAsync(Diagnostic diagnostic)

@@ -34,7 +34,7 @@ public class TagRepository : ITagRepository
 
     public async Task<Tag?> GetByNameAsync(string name)
     {
-        return await _context.Tags.FirstOrDefaultAsync(t => t.Name == name);
+        return await _context.Tags.FirstOrDefaultAsync(t => t.Name.ToLower() == name.ToLower());
     }
 
     public async Task UpdateAsync(Tag tag)

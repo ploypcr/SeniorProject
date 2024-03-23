@@ -36,7 +36,7 @@ public class ProblemRepository : IProblemRepository
 
     public async Task<Problem?> GetByNameAsync(string name)
     {
-        return await _context.Problems.FirstOrDefaultAsync(problem => problem.Name == name);
+        return await _context.Problems.FirstOrDefaultAsync(problem => problem.Name.ToLower() == name.ToLower());
     }
 
     public async Task UpdateAsync(Problem problem)

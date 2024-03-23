@@ -36,7 +36,7 @@ public class ExaminationRepository : IExaminationRepository
 
     public async Task<Examination?> GetByDetails(string name, string type, string lab, string area)
     {
-        return await _context.Examinations.FirstOrDefaultAsync(e => e.Name == name && e.Type == type && e.Lab == lab && e.Area == area);
+        return await _context.Examinations.FirstOrDefaultAsync(e => e.Name.ToLower() == name.ToLower() && e.Type.ToLower() == type.ToLower() && e.Lab.ToLower() == lab.ToLower() && e.Area.ToLower() == area.ToLower());
     }
 
     public async Task UpdateAsync(Examination e)

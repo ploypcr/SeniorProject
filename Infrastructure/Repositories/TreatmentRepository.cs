@@ -37,7 +37,7 @@ public class TreatmentRepository : ITreatmentRepository
 
     public async Task<Treatment?> GetByNameAndTypeAsync(string name, string type)
     {
-        return await _context.Treatments.FirstOrDefaultAsync(treatment => treatment.Name == name && treatment.Type == type);
+        return await _context.Treatments.FirstOrDefaultAsync(treatment => treatment.Name.ToLower() == name.ToLower() && treatment.Type.ToLower() == type.ToLower());
     }
 
     public async Task UpdateAsync(Treatment treatment)

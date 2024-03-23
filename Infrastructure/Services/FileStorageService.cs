@@ -140,23 +140,23 @@ public class FileStorageService : IFileStorageService{
                 //Console.WriteLine(worksheet.Cells[2,13].Value == null);
                 var lookUpDrawing = worksheet.Drawings.ToLookup(x => $"{ x.From.Row}_{x.From.Column}");
                 IEnumerable<string> keys = lookUpDrawing.Select(t => t.Key);
-                foreach(string k in keys){
-                    Console.WriteLine(k);
-                }
-                Console.WriteLine(worksheet.Dimension.End.Row);
+                // foreach(string k in keys){
+                //     Console.WriteLine(k);
+                // }
+                // Console.WriteLine(worksheet.Dimension.End.Row);
                 for(;!emptyRow;){
-                    if(worksheet.Cells[i,1].Value == null && worksheet.Cells[i,12].Value == null){
+                    if(worksheet.Cells[i,1].Value == null && worksheet.Cells[i,13].Value == null){
                         emptyRow=true;
                         //Console.WriteLine("y");
                         continue;
                     }
-                    var signalment_species = worksheet.Cells[i,2].GetValue<string>();
-                    var signalment_breed = worksheet.Cells[i,3].GetValue<string>();
-                    var signalment_gender = worksheet.Cells[i,4].GetValue<string>();
+                    var signalment_species = worksheet.Cells[i,2].Value != null ? worksheet.Cells[i,2].GetValue<string>() : null;
+                    var signalment_breed = worksheet.Cells[i,3].Value != null ? worksheet.Cells[i,3].GetValue<string>() : null;
+                    var signalment_gender = worksheet.Cells[i,4].Value != null ? worksheet.Cells[i,4].GetValue<string>() : null;
                     
-                    var signalment_sterilize = worksheet.Cells[i,5].GetValue<string>();
-                    var signalment_age = worksheet.Cells[i,6].GetValue<string>();
-                    var signalment_weight = worksheet.Cells[i,7].GetValue<string>();
+                    var signalment_sterilize = worksheet.Cells[i,5].Value != null ? worksheet.Cells[i,5].GetValue<string>() : "";
+                    var signalment_age = worksheet.Cells[i,6].Value != null ? worksheet.Cells[i,6].GetValue<string>() : null;
+                    var signalment_weight = worksheet.Cells[i,7].Value != null ? worksheet.Cells[i,7].GetValue<string>() : null;
                     SignalmentCommand signalment = new SignalmentCommand(
                         signalment_species,
                         signalment_breed,
@@ -165,36 +165,40 @@ public class FileStorageService : IFileStorageService{
                         signalment_age,
                         signalment_weight
                     );
-                    var client_complains = worksheet.Cells[i,8].GetValue<string>();
-                    var historytaking_info = worksheet.Cells[i,9].GetValue<string>();
-                    var general_info = worksheet.Cells[i,10].GetValue<string>();
-                    var problems_1 = worksheet.Cells[i,11].GetValue<string>().Split(",").Select(t => t.Trim()).ToList();
+                    var client_complains = worksheet.Cells[i,8].Value != null ? worksheet.Cells[i,8].GetValue<string>() : null;
+                    var historytaking_info = worksheet.Cells[i,9].Value != null ? worksheet.Cells[i,9].GetValue<string>() :null;
+                    var general_info = worksheet.Cells[i,10].Value != null ? worksheet.Cells[i,10].GetValue<string>():null;
+                    var problems_1 = worksheet.Cells[i,11].Value != null ? worksheet.Cells[i,11].GetValue<string>().Split(",").Select(t => t.Trim()).ToList() : [];
 
                     List<ProblemCommand> problemCommands = new();
                     foreach(string name in problems_1){
-                        var p = await _problemRepository.GetByNameAsync(name);
-                        if(p == null){
-                            throw new ArgumentException("Problem not found.");
+                        if(name != ""){
+                            var p = await _problemRepository.GetByNameAsync(name);
+                            if(p == null){
+                                throw new ArgumentException("Problem not found.");
+                            }
+                            problemCommands.Add(new ProblemCommand(p.Id.Value.ToString(),1));
                         }
-                        problemCommands.Add(new ProblemCommand(p.Id.Value.ToString(),1));
                     }
 
-                    var diff_diagnostics = worksheet.Cells[i,12].GetValue<string>().Split(",").Select(t => t.Trim()).ToList();
+                    var diff_diagnostics = worksheet.Cells[i,12].Value != null ? worksheet.Cells[i,12].GetValue<string>().Split(",").Select(t => t.Trim()).ToList() : [];
                     //var ten_diagnostics = worksheet.Cells[i,20].GetValue<string>().Split(",").Select(t => t.Trim()).ToList();
 
                     List<DiagnosticCommand> diagnosticCommands = new();
                     foreach(string name in diff_diagnostics){
-                        var d = await _diagnosticRepository.GetByNameAndTypeAsync(name,"Differential");
-                        if(d == null){
-                            throw new ArgumentException("Diagnosis not found.");
+                        if(name != ""){
+                            var d = await _diagnosticRepository.GetByNameAndTypeAsync(name,"Differential");
+                            if(d == null){
+                                throw new ArgumentException("Diagnosis not found.");
+                            }
+                            diagnosticCommands.Add(new DiagnosticCommand(d.Id.Value.ToString()));
                         }
-                        diagnosticCommands.Add(new DiagnosticCommand(d.Id.Value.ToString()));
                     }
 
 
                     var examination1_num = worksheet.Cells[i,13].GetValue<int>();
                     List<ExaminationCommand> examinationCommands = new();
-                    for(int j = i; j < examination1_num+i;j++){
+                    for(int j = i;j < examination1_num+i;j++){
                         var examination1_lab = worksheet.Cells[j,14].GetValue<string>();
                         var examination1_type = worksheet.Cells[j,15].GetValue<string>();
                         var examination1_name = worksheet.Cells[j,16].GetValue<string>();
@@ -227,49 +231,60 @@ public class FileStorageService : IFileStorageService{
                         }
                     }
 
-                    var problems_2 = worksheet.Cells[i,20].GetValue<string>().Split(",").Select(t => t.Trim()).ToList();
+                    var problems_2 = worksheet.Cells[i,20].Value != null ? worksheet.Cells[i,20].GetValue<string>().Split(",").Select(t => t.Trim()).ToList() : [];
                     foreach(string name in problems_2){
-                        var p = await _problemRepository.GetByNameAsync(name);
-                        if(p == null){
-                            throw new ArgumentException("No problem found.");
+                        if(name != ""){
+                            var p = await _problemRepository.GetByNameAsync(name);
+                            if(p == null){
+                                throw new ArgumentException("No problem found.");
+                            }
+                            problemCommands.Add(new ProblemCommand(
+                                p.Id.Value.ToString(),
+                                2
+                            ));
                         }
-                        problemCommands.Add(new ProblemCommand(
-                            p.Id.Value.ToString(),
-                            2
-                        ));
                     }
 
-                    var ten_diagnostics = worksheet.Cells[i,21].GetValue<string>().Split(",").Select(t => t.Trim()).ToList();
+                    var ten_diagnostics = worksheet.Cells[i,21].Value != null ? worksheet.Cells[i,21].GetValue<string>().Split(",").Select(t => t.Trim()).ToList() : [];
                     foreach(string name in ten_diagnostics){
-                        var d = await _diagnosticRepository.GetByNameAndTypeAsync(name,"Tentative");
-                        if(d == null){
-                            throw new ArgumentException("No diagnosis found.");
+                        if(name != ""){
+                            var d = await _diagnosticRepository.GetByNameAndTypeAsync(name,"Tentative");
+                            if(d == null){
+                                throw new ArgumentException("No diagnosis found.");
+                            }
+                            diagnosticCommands.Add(new DiagnosticCommand(d.Id.Value.ToString()));
                         }
-                        diagnosticCommands.Add(new DiagnosticCommand(d.Id.Value.ToString()));
                     }
 
-                    var treatment_types = worksheet.Cells[i,22].GetValue<string>().Split(",").Select(t => t.Trim()).ToList();
-                    var treatment_names = worksheet.Cells[i,23].GetValue<string>().Split(",").Select(t => t.Trim()).ToList();
+                    var treatment_types = worksheet.Cells[i,22].Value != null ? worksheet.Cells[i,22].GetValue<string>().Split(",").Select(t => t.Trim()).ToList() : [];
+                    var treatment_names = worksheet.Cells[i,23].Value != null ? worksheet.Cells[i,23].GetValue<string>().Split(",").Select(t => t.Trim()).ToList() : [];
+                    if(treatment_names.Count != treatment_types.Count){
+                        throw new ArgumentException("Treatment type and name size not equal.");
+                    }
                     var treatments = treatment_types.Zip(treatment_names, (t,n) => new { Type = t, Name = n});
                     List<TreatmentCommand> treatmentCommands = new();
                     foreach(var t in treatments){
-                        var treatment = await _treatmentRepository.GetByNameAndTypeAsync(t.Name, t.Type);
-                        if(treatment == null){
-                            throw new ArgumentException("No treatment found.");
+                        if(t.Name != "" && t.Type != ""){
+                            var treatment = await _treatmentRepository.GetByNameAndTypeAsync(t.Name, t.Type);
+                            if(treatment == null){
+                                throw new ArgumentException("No treatment found.");
+                            }
+                            treatmentCommands.Add(new TreatmentCommand(treatment.Id.Value.ToString()));
                         }
-                        treatmentCommands.Add(new TreatmentCommand(treatment.Id.Value.ToString()));
                     }
 
-                    var tags = worksheet.Cells[i,24].GetValue<string>().Split(",").Select(t => t.Trim()).ToList();
+                    var tags = worksheet.Cells[i,24].Value != null ? worksheet.Cells[i,24].GetValue<string>().Split(",").Select(t => t.Trim()).ToList() : [];
                     List<TagCommand> tagCommands = new();
                     foreach(string t in tags){
-                        var tag = await _tagRepository.GetByNameAsync(t);
-                        if(tag == null){
-                            throw new Exception("No tag found.");
+                        if(t != ""){
+                            var tag = await _tagRepository.GetByNameAsync(t);
+                            if(tag == null){
+                                throw new Exception("No tag found.");
+                            }
+                            tagCommands.Add(new TagCommand(tag.Id.Value.ToString()));
                         }
-                        tagCommands.Add(new TagCommand(tag.Id.Value.ToString()));
                     }
-                    Console.WriteLine(treatmentCommands[0].Id);
+                    
                     questions.Add(new CreateQuestionCommand(
                         client_complains,
                         historytaking_info,
@@ -319,10 +334,10 @@ public class FileStorageService : IFileStorageService{
 
         string[] columnName1 = {
                 "เลขข้อ", 
-                "ประเภท", 
+                "ประเภท (ใส่ได้แค่ สุนัข, แมว, นก)", 
                 "สายพันธุ์",
-                "เพศ",
-                "ทำหมัน (y/n)",
+                "เพศ (ใส่แค่ ผู้/เมีย)",
+                "ทำหมัน (ใส่แค่ y/n)",
                 "อายุ",
                 "น้ำหนัก",
                 "Client complains",
