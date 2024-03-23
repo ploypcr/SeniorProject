@@ -42,10 +42,10 @@ public class UserRegisterCommandHandler : IRequestHandler<UserRegisterCommand>
         var hashedPassword = BC.HashPassword(request.Password, salt);
 
         user = User.Create(request.FirstName, 
-        request.LastName, request.StudentId, request.Email, hashedPassword, emailToken, false);
+        request.LastName, request.StudentId, request.Email, hashedPassword, emailToken, true);
         await _userRepository.AddUserAsync(user);
 
-        await _emailService.SendEmail(request.Email, user.Id, emailToken);
+        //await _emailService.SendEmail(request.Email, user.Id, emailToken);
 
     }
 }

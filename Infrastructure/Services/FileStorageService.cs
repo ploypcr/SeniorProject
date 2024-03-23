@@ -3,8 +3,7 @@ using System.Linq.Expressions;
 using Application.Abstractions;
 using Application.Abstractions.Services;
 using Application.Questions.Commands;
-using Domain.Entities;
-using ExcelDataReader;
+
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using OfficeOpenXml;
@@ -282,7 +281,7 @@ public class FileStorageService : IFileStorageService{
                         diagnosticCommands,
                         tagCommands,
                         userId,
-                        1
+                        0
                     ));
 
                     var next = examination1_num == 0 ? 1 : examination1_num;

@@ -44,7 +44,7 @@ public class UserLoginHandler : IRequestHandler<UserLogin, TokenResult>
             emailToken = emailToken.Replace("+","");
             user.UpdateEmailToken(emailToken);
             await _userRepository.UpdateUserAsync(user);
-            await _emailService.SendEmail(user.Email, user.Id, emailToken);
+            //await _emailService.SendEmail(user.Email, user.Id, emailToken);
 
             throw new ArgumentException("Please confirm your email first. we resend a link to your email.");
         }

@@ -44,7 +44,7 @@ public class ResendEmailCommandHandler : IRequestHandler<ResendEmailCommand>
         user.UpdateEmailToken(emailToken);
         await _userRepository.UpdateUserAsync(user);
 
-        await _emailService.SendEmail(request.Email, user.Id, emailToken);
+        //await _emailService.SendEmail(request.Email, user.Id, emailToken);
 
     }
 }

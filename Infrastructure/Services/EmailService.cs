@@ -1,4 +1,6 @@
 using Application.Abstractions.Services;
+using MailKit;
+using MailKit.Net.Proxy;
 using MailKit.Net.Smtp;
 using MailKit.Security;
 using Microsoft.Extensions.Configuration;
@@ -24,13 +26,15 @@ public class EmailService : IEmailService
         email.Body = new TextPart(MimeKit.Text.TextFormat.Html) { 
             Text = body
         };
-        using (var smtp = new SmtpClient())
+        using (var smtp = new SmtpClient(new ProtocolLogger("smtp.log")))
         {
-            await smtp.ConnectAsync("smtp.gmail.com", 587, SecureSocketOptions.StartTls);
+            //smtp.ProxyClient = new Socks5Client("10.3.133.119",5000);
+            await smtp.ConnectAsync("smtp.gmail.com", 587, SecureSocketOptions.Auto);
             // Note: only needed if the SMTP server requires authentication
             await smtp.AuthenticateAsync(_configuration.GetSection("EmailConfig:Email").Value, _configuration.GetSection("EmailConfig:Password").Value);
             await smtp.SendAsync(email);
-            smtp.Disconnect(true);
+
+            await smtp.DisconnectAsync(true);
         }
     }
 }
