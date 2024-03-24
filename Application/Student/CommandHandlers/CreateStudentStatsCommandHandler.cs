@@ -137,22 +137,28 @@ public class CreateStudentStatsCommandHandler : IRequestHandler<CreateStudentSta
         }
 
         problems1_score = (problems1_score/question.Problems.Where(p => p.Round == 1).Count())*12.5*(request.HeartProblem1/5);
-        problems1_score -= 12.5/question.Problems.Where(p => p.Round == 1).Count()*0.5*wrong_problem1;
+        problems1_score -= (12.5/question.Problems.Where(p => p.Round == 1).Count())*0.5*wrong_problem1;
+        problems1_score  = problems1_score >= 0 ? problems1_score : 0;
 
         problems2_score = (problems2_score/question.Problems.Where(p => p.Round == 2).Count())*12.5*(request.HeartProblem2/5);
-        problems2_score -= 12.5/question.Problems.Where(p => p.Round == 2).Count()*0.5*wrong_problem2;
+        problems2_score -= (12.5/question.Problems.Where(p => p.Round == 2).Count())*0.5*wrong_problem2;
+        problems2_score  = problems2_score >= 0 ? problems2_score : 0;
 
         examinations_score = (examinations_score/question.Examinations.Count())*25;
-        examinations_score -= 25/question.Examinations.Count()*0.5*wrong_exam;
+        examinations_score -= (25/question.Examinations.Count())*0.5*wrong_exam;
+        examinations_score  = examinations_score >= 0 ? examinations_score : 0;
 
         treatment_score = (treatment_score/question.Treatments.Count())*25;
-        treatment_score -= 25/question.Treatments.Count()*0.5*wrong_treatment;
+        treatment_score -= (25/question.Treatments.Count())*0.5*wrong_treatment;
+        treatment_score  = treatment_score >= 0 ? treatment_score : 0;
 
         diff_diagnostic_score = (diff_diagnostic_score/question.Diagnostics.Where(d => d.Type == "differential").Count())*25;
         diff_diagnostic_score -= 12.5*question.Diagnostics.Where(d => d.Type == "differential").Count()*0.5*wrong_diff;
+        diff_diagnostic_score  = diff_diagnostic_score >= 0 ? diff_diagnostic_score : 0;
 
         ten_diagnostic_score = (ten_diagnostic_score/question.Diagnostics.Where(d => d.Type == "tentative").Count())*25;
         ten_diagnostic_score -= 12.5*question.Diagnostics.Where(d => d.Type == "tentative").Count()*0.5*wrong_ten;
+        ten_diagnostic_score  = ten_diagnostic_score >= 0 ? ten_diagnostic_score : 0;
 
         studentSelection.SetScore(
             problems1_score,
