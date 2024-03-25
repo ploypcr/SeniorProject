@@ -133,11 +133,11 @@ public class UpdateQuestionHandler : IRequestHandler<UpdateQuestionCommand, Ques
 
         if(request.Treatments != null){
             foreach (TreatmentCommand treatmentRequest in request.Treatments){
+                var treatment = await _treatmentRepository.GetByIdAsync(new TreatmentId(new Guid(treatmentRequest.Id)));
+                if(treatment == null){
+                    throw new ArgumentException("This treatment doesn't exist.");
+                }
                 if(!qt.Any(rt => rt.Equals(treatmentRequest))){
-                    var treatment = await _treatmentRepository.GetByIdAsync(new TreatmentId(new Guid(treatmentRequest.Id)));
-                    if(treatment == null){
-                        throw new ArgumentException("This treatment doesn't exist.");
-                    }
                     question.AddTreatment(treatment);
                 }
             }
@@ -159,11 +159,11 @@ public class UpdateQuestionHandler : IRequestHandler<UpdateQuestionCommand, Ques
         }
         if(request.Diagnostics != null){
             foreach (DiagnosticCommand diagnosticRequest in request.Diagnostics){
-                if(!qd.Any(q => q.Equals(diagnosticRequest))){
-                    var diagnostic = await _diagnosticRepository.GetByIdAsync(new DiagnosticId(new Guid(diagnosticRequest.Id)));
-                    if(diagnostic == null){
+                var diagnostic = await _diagnosticRepository.GetByIdAsync(new DiagnosticId(new Guid(diagnosticRequest.Id)));
+                if(diagnostic == null){
                         throw new ArgumentException("This diagnosis doesn't exist.");
-                    }
+                }
+                if(!qd.Any(q => q.Equals(diagnosticRequest))){
                     question.AddDiagnostic(diagnostic);
                 }
             }
@@ -186,11 +186,11 @@ public class UpdateQuestionHandler : IRequestHandler<UpdateQuestionCommand, Ques
 
         if(request.Tags != null){
             foreach (TagCommand tagRequest in request.Tags){
-                if(!qtg.Any(q => q.Equals(tagRequest))){
-                    var tag = await _tagRepository.GetByIdAsync(new TagId(new Guid(tagRequest.Id)));
+                var tag = await _tagRepository.GetByIdAsync(new TagId(new Guid(tagRequest.Id)));
                     if(tag == null){
                         throw new ArgumentException("This tag doesn't exist");
-                    }
+                }
+                if(!qtg.Any(q => q.Equals(tagRequest))){
                     question.AddTag(tag);
                 }
             }

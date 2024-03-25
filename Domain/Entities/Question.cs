@@ -68,7 +68,7 @@ public class Question{
     }
 
     public void RemoveProblem(QuestionProblem questionProblem){;
-        _problems.Add(questionProblem);
+        _problems.Remove(questionProblem);
     }
     public void AddExamination(ExaminationId examinationId, string? textResult, string? imgResult){
         var questionexamination = new QuestionExamination(
