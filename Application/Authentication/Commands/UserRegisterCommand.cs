@@ -6,5 +6,6 @@ public record UserRegisterCommand(
     string LastName,
     string StudentId,
     string Email,
-    string Password
+    string Password,
+    string Role
 ) : IRequest;

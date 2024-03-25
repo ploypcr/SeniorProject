@@ -11,6 +11,9 @@ public class User{
     public string? EmailVerificationToken {get; private set;}
     public bool EmailVerified {get; private set;}
 
+    public string Role {get; private set;}
+
+
     private readonly List<RefreshToken> _refreshTokens = new();
     public IReadOnlyList<RefreshToken> RefreshTokens => _refreshTokens.ToList();
 
@@ -22,7 +25,8 @@ public class User{
         string email,
         string password,
         string token,
-        bool verified
+        bool verified,
+        string role
     ){
         return new User{
             StudentId = studentId,
@@ -32,7 +36,8 @@ public class User{
             Email = email,
             Password = password,
             EmailVerificationToken = token,
-            EmailVerified = verified
+            EmailVerified = verified,
+            Role = role
         };
     }
 

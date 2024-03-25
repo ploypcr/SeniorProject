@@ -32,7 +32,7 @@ public class AuthController : ControllerBase{
 
     [HttpPost("user-register")]
     public async Task<IActionResult> RegisterUser(UserRegisterRequest request){
-        var command  = new UserRegisterCommand(request.FirstName , request.LastName, request.StudentId, request.Email, request.Password);
+        var command  = new UserRegisterCommand(request.FirstName , request.LastName, request.StudentId, request.Email, request.Password, "User");
         await _mediator.Send(command);
         return Ok(200);
     }

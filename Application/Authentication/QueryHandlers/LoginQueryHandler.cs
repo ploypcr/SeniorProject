@@ -1,8 +1,10 @@
+using System.Security.Authentication;
 using Application.Abstractions;
 using Application.Abstractions.Authentication;
 using Application.Authentication.Queries;
 using Domain.Entities;
 using MediatR;
+using BC = BCrypt.Net.BCrypt;
 using Microsoft.Extensions.Configuration;
 
 namespace Application.Authentication.QueryHandlers;
@@ -26,11 +28,12 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, TokenResult>
         if(user == null){
             throw new ArgumentException ("Don't have this user");
         }
-
-        if (user.Password != request.Password){
-            throw new ArgumentException ("Password doesn't match.");
+        if(user.Role != "Admin"){
+            throw new ArgumentException("Invalid User.");
         }
-
+        if(!BC.Verify(request.Password, user.Password)){
+            throw new InvalidCredentialException("Invalid user or password.");
+        }
         foreach(var r in user.RefreshTokens){
             if(r.CreatedTime.AddDays(1) < DateTime.UtcNow){
                 user.RemoveRefreshToken(r);
