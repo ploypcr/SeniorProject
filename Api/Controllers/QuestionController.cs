@@ -223,7 +223,7 @@ public class QuestionController : ControllerBase
         return Ok(200);
     }
 
-    [Authorize(Roles = "User")]
+    [Authorize(Roles = "Admin,User")]
     [HttpPost("{id:guid}/examinationresult")]
     public async Task<IActionResult> GetExaminationResult(List<GetExaminationRequest> request, Guid id){
         var commands = request.Select(r => _mapper.Map<GetExaminationResultCommand>((r,id.ToString()))).ToList();
