@@ -39,20 +39,28 @@ public class CreateStudentStatsCommandHandler : IRequestHandler<CreateStudentSta
 
         double problems1_score = 0;
         double wrong_problem1 = 0;
+        double correct_problem1 = 0;
 
         double problems2_score = 0;
         double wrong_problem2 = 0;
+        double correct_problem2 = 0;
 
         double examinations_score = 0;
         double wrong_exam = 0;
+        double correct_exam = 0;
 
         double treatment_score = 0;
+        double correct_treatment = 0;
         double wrong_treatment = 0;
+
         double diff_diagnostic_score = 0;
         double wrong_diff = 0;
+        double correct_diff = 0;
 
         double ten_diagnostic_score = 0;
         double wrong_ten = 0;
+        double correct_ten = 0;
+
 
 
 
@@ -62,10 +70,10 @@ public class CreateStudentStatsCommandHandler : IRequestHandler<CreateStudentSta
             }
             if(question.Problems.Any(qp => qp.ProblemId == new ProblemId(new Guid(p.Id)) && qp.Round == p.Round)){
                 if(p.Round == 1){
-                    problems1_score++;
+                    correct_problem1++;
                 }
                 else{
-                    problems2_score++;
+                    correct_problem2++;
                 }
             }else{
                 if(p.Round == 1){
@@ -86,7 +94,7 @@ public class CreateStudentStatsCommandHandler : IRequestHandler<CreateStudentSta
                 throw new ArgumentException("No examination found.");
             }
             if(question.Examinations.Any(qe => qe.ExaminationId == new ExaminationId(new Guid(e.Id)))){
-                examinations_score++;
+                correct_exam++;
             }else{
                 wrong_exam++;
             }
@@ -102,10 +110,10 @@ public class CreateStudentStatsCommandHandler : IRequestHandler<CreateStudentSta
             if(question.Diagnostics.Any(qd => qd.Id == new DiagnosticId(new Guid(d.Id)))){
                 Console.WriteLine(diagnostic.Type);
                 if(diagnostic.Type == "tentative"){
-                    ten_diagnostic_score++;
+                    correct_ten++;
                 }
                 if(diagnostic.Type == "differential"){
-                    diff_diagnostic_score++;
+                    correct_diff++;
                 }
                 
             }else{
@@ -126,7 +134,7 @@ public class CreateStudentStatsCommandHandler : IRequestHandler<CreateStudentSta
                 throw new ArgumentException("Treatment not found.");
             }
             if(question.Treatments.Any(qt => qt.Id == new TreatmentId(new Guid(t.Id)))){
-                treatment_score++;
+                correct_treatment++;
                 
             }else{
                 wrong_treatment++;
@@ -135,30 +143,33 @@ public class CreateStudentStatsCommandHandler : IRequestHandler<CreateStudentSta
                 treatment
             );
         }
+        Console.WriteLine(request.HeartProblem1);
+        Console.WriteLine(correct_problem1);
+        Console.WriteLine(wrong_problem1);
 
-        problems1_score = (problems1_score/question.Problems.Where(p => p.Round == 1).Count())*12.5*(request.HeartProblem1/5);
+        problems1_score += (12.5/question.Problems.Where(p => p.Round == 1).Count())*correct_problem1*(((double)request.HeartProblem1)/5);
         problems1_score -= (12.5/question.Problems.Where(p => p.Round == 1).Count())*0.5*wrong_problem1;
-        problems1_score  = problems1_score >= 0 ? problems1_score : 0;
+        problems1_score  = problems1_score > (double)0 ? problems1_score : 0;
 
-        problems2_score = (problems2_score/question.Problems.Where(p => p.Round == 2).Count())*12.5*(request.HeartProblem2/5);
+        problems2_score += (12.5/question.Problems.Where(p => p.Round == 2).Count())*correct_problem2*(((double)request.HeartProblem2)/5);
         problems2_score -= (12.5/question.Problems.Where(p => p.Round == 2).Count())*0.5*wrong_problem2;
-        problems2_score  = problems2_score >= 0 ? problems2_score : 0;
+        problems2_score  = problems2_score > (double)0 ? problems2_score : 0;
 
-        examinations_score = (examinations_score/question.Examinations.Count())*25;
+        examinations_score += (25/question.Examinations.Count())*correct_exam;
         examinations_score -= (25/question.Examinations.Count())*0.5*wrong_exam;
-        examinations_score  = examinations_score >= 0 ? examinations_score : 0;
+        examinations_score  = examinations_score > (double)0 ? examinations_score : 0;
 
-        treatment_score = (treatment_score/question.Treatments.Count())*25;
+        treatment_score += (25/question.Treatments.Count())*correct_treatment;
         treatment_score -= (25/question.Treatments.Count())*0.5*wrong_treatment;
-        treatment_score  = treatment_score >= 0 ? treatment_score : 0;
+        treatment_score  = treatment_score > (double)0 ? treatment_score : 0;
 
-        diff_diagnostic_score = (diff_diagnostic_score/question.Diagnostics.Where(d => d.Type == "differential").Count())*25;
+        diff_diagnostic_score += (12.5/question.Diagnostics.Where(d => d.Type == "differential").Count())*correct_diff;
         diff_diagnostic_score -= 12.5*question.Diagnostics.Where(d => d.Type == "differential").Count()*0.5*wrong_diff;
-        diff_diagnostic_score  = diff_diagnostic_score >= 0 ? diff_diagnostic_score : 0;
+        diff_diagnostic_score  = diff_diagnostic_score > (double)0.00 ? diff_diagnostic_score : 0;
 
-        ten_diagnostic_score = (ten_diagnostic_score/question.Diagnostics.Where(d => d.Type == "tentative").Count())*25;
+        ten_diagnostic_score += (12.5/question.Diagnostics.Where(d => d.Type == "tentative").Count())*correct_ten;
         ten_diagnostic_score -= 12.5*question.Diagnostics.Where(d => d.Type == "tentative").Count()*0.5*wrong_ten;
-        ten_diagnostic_score  = ten_diagnostic_score >= 0 ? ten_diagnostic_score : 0;
+        ten_diagnostic_score  = ten_diagnostic_score > (double)0.00 ? ten_diagnostic_score : 0;
 
         studentSelection.SetScore(
             problems1_score,
