@@ -259,6 +259,7 @@ public class QuestionController : ControllerBase
         List<StudentStatsResponse> studentStatsResponses = new();
         foreach (var s in getStudentStatsResult){
             studentStatsResponses.Add(new StudentStatsResponse(
+                s.StudentStats.QuesVersion.ToString(),
                 s.Student.Id,
                 s.Student.FirstName + " "+s.Student.LastName,
                 s.Examination.Select(e => _mapper.Map<StudentExaminationResponse>(e)).ToList(),

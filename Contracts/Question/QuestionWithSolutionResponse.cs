@@ -19,9 +19,8 @@ public record QuestionWithSolutionResponse(
     List<QuestionExaminationResponse> Examinations,
     List<TagResponse> Tags,
     List<LogResponse> Logs,
-
     SignalmentResponse Signalment,
-    bool Modified,
+    int Modified,
     int Status
 );
 

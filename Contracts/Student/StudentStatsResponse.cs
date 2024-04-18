@@ -5,6 +5,7 @@ using Contracts.Treatment;
 namespace Contracts.Student;
 
 public record StudentStatsResponse(
+    string QuesVersion,
     string UserId,
     string UserName,
     List<StudentExaminationResponse> Examinations,

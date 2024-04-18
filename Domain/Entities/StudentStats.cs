@@ -14,7 +14,7 @@ public class StudentStats{
     public IReadOnlyList<StudentProblem> Problems => _problems.ToList();
     public IReadOnlyList<Diagnostic> Diagnostics => _diagnostics.ToList();
     public IReadOnlyList<Treatment> Treatments => _treatments.ToList();
-
+    public double QuesVersion {get; private set;}
     public double Problem1_Score {get; private set;}
     public double Problem2_Score {get; private set;}
     public double Examination_Score {get; private set;}
@@ -24,12 +24,14 @@ public class StudentStats{
     public DateTime DateTime {get; private set;}
     public static StudentStats Create(
         string userId,
-        QuestionId questionId
+        QuestionId questionId,
+        double quesVersion
     ){
         return new StudentStats{
             Id = new StudentStatsId(Guid.NewGuid()),
             UserId = userId,
             QuestionId = questionId,
+            QuesVersion = quesVersion,
             DateTime = DateTime.UtcNow
         };
     }

@@ -20,6 +20,8 @@ public class StudentSelectionConfiguraation : IEntityTypeConfiguration<StudentSt
             id => id.Value,
             value => new StudentStatsId(value)
         );
+
+        builder.Property(s => s.QuesVersion).HasDefaultValue(1.1);
         
         builder.HasOne<Question>()
             .WithMany()
