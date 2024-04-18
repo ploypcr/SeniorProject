@@ -31,7 +31,7 @@ public class UpdateTagHandler : IRequestHandler<UpdateTagCommand, Tag>
         var questions = await _questionRepository.GetByTagAsync(request.TagId);
 
         foreach(Question q in questions){
-            q.UpdateModified(true);
+            q.UpdateModified(1);
             await _questionRepository.UpdateQuestion(q);
         }
 

@@ -31,6 +31,7 @@ public class StudentMappingConfig : IRegister
 
         config.NewConfig<QuestionStatsResult, QuestionStatsResponse>()
             .Map(dest => dest.QuestionId, src => src.Question.Id.Value.ToString())
+            .Map(dest => dest.QuesVersion, src => src.Question.QuesVersion.ToString())
             .Map(dest => dest.QuestionName, src => src.Question.Name)
             .Map(dest => dest.Diagnostics, src => src.StudentStats.Diagnostics)
             .Map(dest => dest.Treatments, src => src.StudentStats.Treatments)

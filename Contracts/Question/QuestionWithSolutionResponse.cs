@@ -8,6 +8,7 @@ namespace Contracts.Question;
 
 public record QuestionWithSolutionResponse(
     Guid Id ,
+    string QuesVersion,
     string? Name,
     string? ClientComplains,
     string?  HistoryTakingInfo,

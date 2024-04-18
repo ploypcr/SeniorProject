@@ -30,11 +30,7 @@ public class DeleteExaminationHandler : IRequestHandler<DeleteExaminationCommand
         var questions = await _questionRepository.GetByExaminationAsync(request.ExaminationId);
 
         foreach(Question q in questions){
-            var studentStats = await _statsRepository.GetAllStudentStatsInQuestion(q.Id);
-            foreach(var s in studentStats){
-                await _statsRepository.DeleteStudentStats(s);
-            }
-            q.UpdateModified(true);
+            q.UpdateModified(2);
             await _questionRepository.UpdateQuestion(q);
             _fileService.DeleteDirectory(request.ExaminationId.Value.ToString());
         }

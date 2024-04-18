@@ -35,6 +35,7 @@ public class StudentController : ControllerBase{
         var q = await _mediator.Send(new GetQuestionStatsInStudent(questionId.ToString(), userId));
         var getStudentStatsResponse = new QuestionStatsResponse(
                 q.Question.Id.Value.ToString(),
+                q.Question.QuesVersion.ToString(),
                 q.Question.Name.ToString(),
                 q.Examination.Select(e => _mapper.Map<StudentExaminationResponse>(e)).ToList(),
                 q.Problem.Select(e => _mapper.Map<StudentProblemResponse>(e)).ToList(),
@@ -60,6 +61,7 @@ public class StudentController : ControllerBase{
         foreach(var q in getQuestionStatsResult){
             questionStatsResponses.Add(new QuestionStatsResponse(
                 q.Question.Id.Value.ToString(),
+                q.Question.QuesVersion.ToString(),
                 q.Question.Name.ToString(),
                 q.Examination.Select(e => _mapper.Map<StudentExaminationResponse>(e)).ToList(),
                 q.Problem.Select(e => _mapper.Map<StudentProblemResponse>(e)).ToList(),

@@ -143,7 +143,7 @@ public class QuestionController : ControllerBase
         //Console.WriteLine(User.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Sub).Value);
         var command = new GetAllQuestions(tagSearch);
         var getAllQuestionsResult = await _mediator.Send(command);
-        var getOnlyPublishAndNoModifiedQuestion = getAllQuestionsResult.Where(q => q.Question.Status == 1 && q.Question.Modified == false);
+        var getOnlyPublishAndNoModifiedQuestion = getAllQuestionsResult.Where(q => q.Question.Status == 1 && q.Question.Modified == 0);
         var result = getOnlyPublishAndNoModifiedQuestion.Select(q => _mapper.Map<QuestionResponse>(q)).ToList();
         return Ok(result);
     }

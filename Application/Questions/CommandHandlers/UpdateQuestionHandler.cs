@@ -35,10 +35,6 @@ public class UpdateQuestionHandler : IRequestHandler<UpdateQuestionCommand, Ques
             throw new ArgumentException("Don't have this question.");
         }
 
-        var studentStats = await _statsRepository.GetAllStudentStatsInQuestion(question.Id);
-        foreach(var s in studentStats){
-            await _statsRepository.DeleteStudentStats(s);
-        }
         var name = question.Name;
         // if(request.Status != question.Status){
         //     name = await _questionRepository.GetLastestName()+1;
@@ -203,8 +199,8 @@ public class UpdateQuestionHandler : IRequestHandler<UpdateQuestionCommand, Ques
         
         question.AddUser(request.UserId);
 
-        if(question.Modified == true){
-            question.UpdateModified(false);
+        if(question.Modified != 0){
+            question.UpdateModified(0);
         }
         await _questionRepository.UpdateQuestion(question);
         return question;

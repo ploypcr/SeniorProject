@@ -33,11 +33,7 @@ public class UpdateProblemHandler : IRequestHandler<UpdateProblemCommand, Proble
         var questions = await _questionRepository.GetByProblemAsync(request.ProblemId);
 
         foreach(Question q in questions){
-            var studentStats = await _statsRepository.GetAllStudentStatsInQuestion(q.Id);
-            foreach(var s in studentStats){
-                await _statsRepository.DeleteStudentStats(s);
-            }
-            q.UpdateModified(true);
+            q.UpdateModified(1);
             await _questionRepository.UpdateQuestion(q);
         }
 

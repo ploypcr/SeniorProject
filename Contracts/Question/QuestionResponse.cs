@@ -4,6 +4,7 @@ namespace Contracts.Question;
 
 public record QuestionResponse(
     Guid Id ,
+    string QuesVersion,
     string? Name,
     string? ClientComplains,
     string?  HistoryTakingInfo,

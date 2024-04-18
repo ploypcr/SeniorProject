@@ -27,6 +27,7 @@ public class QuestionMappingConfig : IRegister
 
         config.NewConfig<QuestionResult, QuestionWithSolutionResponse>()
             .Map(dest => dest.Id, src => src.Question.Id.Value)
+            .Map(dest => dest.QuesVersion, src => src.Question.QuesVersion.ToString())
             .Map(dest => dest.Name, src => src.Question.Name)
             .Map(dest => dest.ClientComplains, src => src.Question.ClientComplains)
             .Map(dest => dest.HistoryTakingInfo, src => src.Question.HistoryTakingInfo)
@@ -41,6 +42,7 @@ public class QuestionMappingConfig : IRegister
             
         config.NewConfig<QuestionResult, QuestionResponse>()
             .Map(dest => dest.Id, src => src.Question.Id.Value)
+            .Map(dest => dest.QuesVersion, src => src.Question.QuesVersion.ToString())
             .Map(dest => dest.Name, src => src.Question.Name)
             .Map(dest => dest.HistoryTakingInfo, src => src.Question.HistoryTakingInfo)
             .Map(dest => dest.GeneralInfo, src => src.Question.GeneralInfo)

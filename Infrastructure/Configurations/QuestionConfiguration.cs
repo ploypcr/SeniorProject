@@ -20,6 +20,9 @@ public class QuestionConfiguration : IEntityTypeConfiguration<Question>
             value => new QuestionId(value)
         );
 
+        builder.Property(q => q.Modified).HasDefaultValue(0);
+        builder.Property(q => q.QuesVersion).HasDefaultValue(1.0);
+
         builder.HasMany(q => q.Problems)
             .WithOne()
             .HasForeignKey(q => q.QuestionId);

@@ -31,7 +31,7 @@ public class DeleteTagHandler : IRequestHandler<DeleteTagCommand>
         var questions = await _questionRepository.GetByTagAsync(request.TagId);
 
         foreach(Question q in questions){
-            q.UpdateModified(true);
+            q.UpdateModified(2);
             await _questionRepository.UpdateQuestion(q);
         }
 

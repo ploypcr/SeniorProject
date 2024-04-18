@@ -22,8 +22,9 @@ public class Question{
 
     public IReadOnlyList<QuestionLog> Logs => _logs.ToList();
     public Signalment? Signalment { get; private set; }
-    public bool Modified { get; private set; }
+    public int Modified { get; private set; }
     public int Status { get; private set; }
+    public double QuesVersion { get; private set; }
 
 
     public static Question Create(
@@ -48,6 +49,7 @@ public class Question{
     }
 
     public void UpdateQuestion(int name, string clientComplains, string historyTakingInfo, string generalInfo, Signalment signalment, int status){
+        QuesVersion += 0.1;
         Name = name;
         ClientComplains = clientComplains;
         HistoryTakingInfo = historyTakingInfo;
@@ -115,7 +117,7 @@ public class Question{
         _logs.Add(questionlog);
     }
 
-    public void UpdateModified(bool modified){
+    public void UpdateModified(int modified){
         Modified = modified;
     }
 

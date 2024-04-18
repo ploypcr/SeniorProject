@@ -5,6 +5,7 @@ namespace Contracts.Student;
 
 public record QuestionStatsResponse(
     string QuestionId,
+    string QuesVersion,
     string QuestionName,
     List<StudentExaminationResponse> Examinations,
     List<StudentProblemResponse> Problems,
