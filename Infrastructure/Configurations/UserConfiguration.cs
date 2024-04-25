@@ -15,7 +15,8 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.HasData(
             User.Create("Admin", "", "9999","admin1", hashedPassword, null, true, "Admin")
         );
-        builder.HasMany(u => u.RefreshTokens).WithOne();
+        
+        builder.HasMany(u => u.RefreshTokens).WithOne().HasForeignKey(u => u.UserId);
 
     }
 }

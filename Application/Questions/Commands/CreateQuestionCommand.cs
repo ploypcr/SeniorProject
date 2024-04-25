@@ -15,7 +15,8 @@ public record CreateQuestionCommand(
     List<DiagnosticCommand> Diagnostics,
     List<TagCommand> Tags,
     string UserId,
-    int Status
+    int Status,
+    string ExtraQues
 ) : IRequest<Question>;
 
 public record ProblemCommand(

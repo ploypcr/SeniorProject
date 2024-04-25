@@ -10,5 +10,6 @@ public record QuestionResponse(
     string?  HistoryTakingInfo,
     string?  GeneralInfo,
     List<TagResponse> Tags,
-    SignalmentResponse Signalment
+    SignalmentResponse Signalment,
+    string? ExtraQues
 );

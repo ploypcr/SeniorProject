@@ -24,9 +24,6 @@ public class HistoryTakingDb : DbContext{
     public DbSet<Tag> Tags {get; set;}
     public DbSet<User> Users {get; set;}
     public DbSet<StudentStats> StudentStats {get; set;}
-
     public DbSet<RefreshToken> RefreshTokens {get; set;}
-
-
 
 }

@@ -8,7 +8,8 @@ public record CreateStudentStatsRequest(
     List<QuestionTreatmentRequest> Treatments,
     List<QuestionDiagnosticRequest> Diagnostics,
     int HeartProblem1,
-    int HeartProblem2
+    int HeartProblem2,
+    string? ExtraAns
 );
 
 public record ExaminationSelection(

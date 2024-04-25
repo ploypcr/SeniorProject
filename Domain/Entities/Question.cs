@@ -25,7 +25,7 @@ public class Question{
     public int Modified { get; private set; }
     public int Status { get; private set; }
     public double QuesVersion { get; private set; }
-
+    public string? ExtraQues {get; private set;}
 
     public static Question Create(
         int name,
@@ -33,7 +33,8 @@ public class Question{
         string historyTakingInfo,
         string generalInfo,
         Signalment signalment,
-        int status
+        int status,
+        string extraQues
     ){
         var question = new Question{
             Id = new QuestionId(Guid.NewGuid()),
@@ -42,13 +43,22 @@ public class Question{
             HistoryTakingInfo = historyTakingInfo,
             GeneralInfo = generalInfo,
             Signalment = signalment,
-            Status = status
+            Status = status,
+            ExtraQues = extraQues
         };
 
         return question;
     }
 
-    public void UpdateQuestion(int name, string clientComplains, string historyTakingInfo, string generalInfo, Signalment signalment, int status){
+    public void UpdateQuestion(
+        int name, 
+        string clientComplains, 
+        string historyTakingInfo, 
+        string generalInfo, 
+        Signalment signalment, 
+        int status,
+        string extraQues
+    ){
         QuesVersion += 0.1;
         Name = name;
         ClientComplains = clientComplains;
@@ -56,7 +66,7 @@ public class Question{
         GeneralInfo = generalInfo;
         Signalment = signalment;
         Status = status;
-
+        ExtraQues = extraQues;
     }
     public void AddProblem(ProblemId problemId, int round){
         var questionproblem = new QuestionProblem(

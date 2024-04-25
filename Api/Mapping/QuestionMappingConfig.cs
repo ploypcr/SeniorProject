@@ -27,7 +27,7 @@ public class QuestionMappingConfig : IRegister
 
         config.NewConfig<QuestionResult, QuestionWithSolutionResponse>()
             .Map(dest => dest.Id, src => src.Question.Id.Value)
-            .Map(dest => dest.QuesVersion, src => src.Question.QuesVersion.ToString())
+            .Map(dest => dest.QuesVersion, src => String.Format("{0:0.0}",src.Question.QuesVersion))
             .Map(dest => dest.Name, src => src.Question.Name)
             .Map(dest => dest.ClientComplains, src => src.Question.ClientComplains)
             .Map(dest => dest.HistoryTakingInfo, src => src.Question.HistoryTakingInfo)
@@ -37,17 +37,19 @@ public class QuestionMappingConfig : IRegister
             .Map(dest => dest.Signalment, src => src.Question.Signalment)
             .Map(dest => dest.Tags, src => src.Question.Tags)
             .Map(dest => dest.Modified, src => src.Question.Modified)
+            .Map(dest => dest.ExtraQues, src => src.Question.ExtraQues)
             .Map(dest => dest.Status, src => src.Question.Status);
             
             
         config.NewConfig<QuestionResult, QuestionResponse>()
             .Map(dest => dest.Id, src => src.Question.Id.Value)
-            .Map(dest => dest.QuesVersion, src => src.Question.QuesVersion.ToString())
+            .Map(dest => dest.QuesVersion, src => String.Format("{0:0.0}",src.Question.QuesVersion))
             .Map(dest => dest.Name, src => src.Question.Name)
             .Map(dest => dest.HistoryTakingInfo, src => src.Question.HistoryTakingInfo)
             .Map(dest => dest.GeneralInfo, src => src.Question.GeneralInfo)
             .Map(dest => dest.ClientComplains, src => src.Question.ClientComplains)
             .Map(dest => dest.Signalment, src => src.Question.Signalment)
+            .Map(dest => dest.ExtraQues, src => src.Question.ExtraQues)
             .Map(dest => dest.Tags, src => src.Question.Tags);
         config.NewConfig<QuestionProblemRequest, ProblemCommand>()
             .Map(dest => dest, src => src);

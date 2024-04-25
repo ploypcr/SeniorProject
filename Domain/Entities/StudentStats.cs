@@ -21,18 +21,22 @@ public class StudentStats{
     public double Treatment_Score {get; private set;}
     public double Diff_Diagnostic_Score {get; private set;}
     public double Ten_Diagnostic_Score {get; private set;}
+    public string? ExtraAns {get; private set;}
+
     public DateTime DateTime {get; private set;}
     public static StudentStats Create(
         string userId,
         QuestionId questionId,
-        double quesVersion
+        double quesVersion,
+        string extraAns
     ){
         return new StudentStats{
             Id = new StudentStatsId(Guid.NewGuid()),
             UserId = userId,
             QuestionId = questionId,
             QuesVersion = quesVersion,
-            DateTime = DateTime.UtcNow
+            DateTime = DateTime.UtcNow,
+            ExtraAns = extraAns
         };
     }
     public void SetScore(

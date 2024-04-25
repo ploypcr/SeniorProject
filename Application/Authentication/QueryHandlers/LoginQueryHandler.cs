@@ -45,11 +45,10 @@ public class LoginQueryHandler : IRequestHandler<LoginQuery, TokenResult>
         refreshToken = refreshToken.Replace("=","");
         refreshToken = refreshToken.Replace("+","");
         
-        var userRefreshToken = RefreshToken.Create(refreshToken);
+        var userRefreshToken = RefreshToken.Create(refreshToken, user.Id);
         user.AddRefreshToken(userRefreshToken);
         await _userRepository.UpdateUserAsync(user);
 
-        
         return new TokenResult(
             token, 
             refreshToken, 

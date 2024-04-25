@@ -259,7 +259,7 @@ public class QuestionController : ControllerBase
         List<StudentStatsResponse> studentStatsResponses = new();
         foreach (var s in getStudentStatsResult){
             studentStatsResponses.Add(new StudentStatsResponse(
-                s.StudentStats.QuesVersion.ToString(),
+                String.Format("{0:0.0}",s.StudentStats.QuesVersion),
                 s.Student.Id,
                 s.Student.FirstName + " "+s.Student.LastName,
                 s.Examination.Select(e => _mapper.Map<StudentExaminationResponse>(e)).ToList(),
@@ -272,6 +272,7 @@ public class QuestionController : ControllerBase
                 s.StudentStats.Treatment_Score,
                 s.StudentStats.Diff_Diagnostic_Score,
                 s.StudentStats.Ten_Diagnostic_Score,
+                s.StudentStats.ExtraAns,
                 s.StudentStats.DateTime
                 ));
         }

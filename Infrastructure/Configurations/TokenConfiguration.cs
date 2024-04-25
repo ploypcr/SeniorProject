@@ -9,7 +9,10 @@ public class TokenConfiguration : IEntityTypeConfiguration<RefreshToken>
     public void Configure(EntityTypeBuilder<RefreshToken> builder)
     {
         builder.HasKey(t => t.Id);
-
+        
+        builder.HasOne<User>()
+            .WithMany()
+            .HasForeignKey(t => t.UserId);
 
     }
 }

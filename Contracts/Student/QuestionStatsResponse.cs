@@ -17,5 +17,6 @@ public record QuestionStatsResponse(
     double Treatment_Score,
     double DiffDiag_Score,
     double TenDiag_Score,
+    string? ExtraAns,
     DateTime DateTime
 );

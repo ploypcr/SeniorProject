@@ -21,7 +21,8 @@ public record QuestionWithSolutionResponse(
     List<LogResponse> Logs,
     SignalmentResponse Signalment,
     int Modified,
-    int Status
+    int Status,
+    string? ExtraQues
 );
 
 public record QuestionProblemResponse(

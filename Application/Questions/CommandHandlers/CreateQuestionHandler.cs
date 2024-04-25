@@ -46,7 +46,8 @@ public class CreateQuestionHandler : IRequestHandler<CreateQuestionCommand, Ques
                 request.Signalment?.Weight
                 ),//request.Signalment?.Age,
                 //request.Signalment?.Weight),
-            request.Status
+            request.Status,
+            request.ExtraQues
         );
 
         question.AddUser(request.UserId);

@@ -35,7 +35,9 @@ public class CreateStudentStatsCommandHandler : IRequestHandler<CreateStudentSta
         var studentSelection = StudentStats.Create(
             request.UserId,
             new QuestionId(new Guid(request.QuestionId)),
-            question.QuesVersion);
+            question.QuesVersion,
+            request.ExtraAns
+            );
         //Console.WriteLine(request.Problems);
 
         double problems1_score = 0;

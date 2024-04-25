@@ -22,6 +22,8 @@ public class QuestionConfiguration : IEntityTypeConfiguration<Question>
 
         builder.Property(q => q.Modified).HasDefaultValue(0);
         builder.Property(q => q.QuesVersion).HasDefaultValue(1.0);
+        builder.Property(q => q.ExtraQues).HasDefaultValue("");
+
 
         builder.HasMany(q => q.Problems)
             .WithOne()

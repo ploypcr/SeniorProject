@@ -61,7 +61,7 @@ public class UserLoginHandler : IRequestHandler<UserLogin, TokenResult>
         refreshToken = refreshToken.Replace("=","");
         refreshToken = refreshToken.Replace("+","");
         
-        var userRefreshToken = RefreshToken.Create(refreshToken);
+        var userRefreshToken = RefreshToken.Create(refreshToken, user.Id);
         user.AddRefreshToken(userRefreshToken);
         await _userRepository.UpdateUserAsync(user);
 

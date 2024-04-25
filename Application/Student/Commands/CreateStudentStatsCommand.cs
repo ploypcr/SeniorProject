@@ -12,7 +12,8 @@ public record CreateStudentStatsCommand(
     List<DiagnosticCommand> Diagnostics,
     List<TreatmentCommand> Treatments,
     int HeartProblem1,
-    int HeartProblem2
+    int HeartProblem2,
+    string? ExtraAns
 ) : IRequest<StudentStats>;
 
 public record ExaminationSelectionCommand(

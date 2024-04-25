@@ -51,7 +51,9 @@ public class UpdateQuestionHandler : IRequestHandler<UpdateQuestionCommand, Ques
                     request?.Signalment?.Sterilize, 
                     request?.Signalment?.Age,
                      request?.Signalment?.Weight),
-                request.Status);
+                request.Status,
+                request.ExtraQues
+            );
 
         // check if old problem in question doesn't exist in request and remove it.
         List<ProblemCommand> qp = new();

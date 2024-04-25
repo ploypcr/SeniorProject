@@ -14,7 +14,8 @@ public record CreateOrUpdateQuestionRequest(
     List<QuestionTreatmentRequest>? Treatments,
     List<QuestionDiagnosticRequest>? Diagnostics,
     List<QuestionTagRequest>? Tags,
-    int Status
+    int Status,
+    string? ExtraQues
 );
 
 public record QuestionProblemRequest(

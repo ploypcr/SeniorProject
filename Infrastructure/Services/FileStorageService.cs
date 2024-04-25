@@ -168,7 +168,8 @@ public class FileStorageService : IFileStorageService{
                     "Tentative/Definitive Diagnosis (คั่นด้วยเครื่องหมาย , ) (*)",
                     "ประเภท Treatment (คั่นด้วยเครื่องหมาย , ) (*)",
                     "ชื่อ Treatment (คั่นด้วยเครื่องหมาย , ) (*)",
-                    "Tag ที่เกี่ยวข้อง (คั่นด้วยเครื่องหมาย , ) (*)"
+                    "Tag ที่เกี่ยวข้อง (คั่นด้วยเครื่องหมาย , ) (*)",
+                    "คำถามเพิ่มเติม (ถ้ามี)"
                 };
 
                 for(int k = 0; k < columnName1.Length;k++){
@@ -329,6 +330,8 @@ public class FileStorageService : IFileStorageService{
                             tagCommands.Add(new TagCommand(tag.Id.Value.ToString()));
                         }
                     }
+
+                    var extraQues = worksheet.Cells[i,25].Value != null ? worksheet.Cells[i,25].GetValue<string>() : null;
                     
                     questions.Add(new CreateQuestionCommand(
                         client_complains,
@@ -341,7 +344,8 @@ public class FileStorageService : IFileStorageService{
                         diagnosticCommands,
                         tagCommands,
                         userId,
-                        0
+                        0,
+                        extraQues
                     ));
 
                     var next = examination1_num == 0 ? 1 : examination1_num;
@@ -407,7 +411,8 @@ public class FileStorageService : IFileStorageService{
                 "Tentative/Definitive Diagnosis (คั่นด้วยเครื่องหมาย , ) (*)",
                 "ประเภท Treatment (คั่นด้วยเครื่องหมาย , ) (*)",
                 "ชื่อ Treatment (คั่นด้วยเครื่องหมาย , ) (*)",
-                "Tag ที่เกี่ยวข้อง (คั่นด้วยเครื่องหมาย , ) (*)"
+                "Tag ที่เกี่ยวข้อง (คั่นด้วยเครื่องหมาย , ) (*)",
+                "คำถามเพิ่มเติม (ถ้ามี)"
         };
 
         string[] example1 = {
@@ -434,7 +439,8 @@ public class FileStorageService : IFileStorageService{
                 "ten diag 1, ten diag 2, ten diag 3",
                 "medical, nutritional support, medical",
                 "aaa, bbb, ccc",
-                "สุนัข, ปี 2"
+                "สุนัข, ปี 2",
+                "extra question1"
         };
         string[] example2 = {
                 "", 
@@ -453,6 +459,7 @@ public class FileStorageService : IFileStorageService{
                 "lab 2",
                 "type 1",
                 "name 1",
+                "",
                 "",
                 "",
                 "",
@@ -486,7 +493,8 @@ public class FileStorageService : IFileStorageService{
                 "ten diag 1, ten diag 2, ten diag 3",
                 "medical, nutritional support, medical",
                 "aaa, bbb, ccc",
-                "แมว, ปี 3, ยาก"
+                "แมว, ปี 3, ยาก",
+                ""
         };
         string[] columnName2 = {
             "ชื่อ Problem"

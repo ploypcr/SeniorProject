@@ -43,6 +43,8 @@ public class StudentSelectionConfiguraation : IEntityTypeConfiguration<StudentSt
 
         builder.HasMany(s => s.Treatments)
             .WithMany();
+
+        builder.Property(s => s.ExtraAns).HasDefaultValue("");
         
     }
 };
