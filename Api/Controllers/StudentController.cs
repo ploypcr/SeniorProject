@@ -47,6 +47,7 @@ public class StudentController : ControllerBase{
                 q.StudentStats.Treatment_Score,
                 q.StudentStats.Diff_Diagnostic_Score,
                 q.StudentStats.Ten_Diagnostic_Score,
+                q.Question.ExtraQues,
                 q.StudentStats.ExtraAns,
                 q.StudentStats.DateTime
             );
@@ -74,6 +75,7 @@ public class StudentController : ControllerBase{
                 q.StudentStats.Treatment_Score,
                 q.StudentStats.Diff_Diagnostic_Score,
                 q.StudentStats.Ten_Diagnostic_Score,
+                q.Question.ExtraQues,
                 q.StudentStats.ExtraAns,
                 q.StudentStats.DateTime
             ));

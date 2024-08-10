@@ -15,5 +15,6 @@ public record UpdateQuestionCommand(
     List<TagCommand> Tags,
     string UserId,
     int Status,
-    string ExtraQues
+    string ExtraQues,
+    bool NewVersion
 ) : IRequest<Question>;

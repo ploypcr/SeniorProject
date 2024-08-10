@@ -51,6 +51,7 @@ public class Question{
     }
 
     public void UpdateQuestion(
+        double quesVersion,
         int name, 
         string clientComplains, 
         string historyTakingInfo, 
@@ -59,7 +60,7 @@ public class Question{
         int status,
         string extraQues
     ){
-        QuesVersion += 0.1;
+        QuesVersion = quesVersion;
         Name = name;
         ClientComplains = clientComplains;
         HistoryTakingInfo = historyTakingInfo;

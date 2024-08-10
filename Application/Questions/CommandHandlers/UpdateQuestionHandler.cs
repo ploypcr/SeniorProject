@@ -39,7 +39,9 @@ public class UpdateQuestionHandler : IRequestHandler<UpdateQuestionCommand, Ques
         // if(request.Status != question.Status){
         //     name = await _questionRepository.GetLastestName()+1;
         // }
+        var quesVersion = request.NewVersion == true ? question.QuesVersion + 0.1 : question.QuesVersion;
         question.UpdateQuestion(
+                quesVersion,
                 name,
                 request.ClientComplains, 
                 request.HistoryTakingInfo, 

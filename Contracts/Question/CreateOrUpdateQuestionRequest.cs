@@ -15,7 +15,8 @@ public record CreateOrUpdateQuestionRequest(
     List<QuestionDiagnosticRequest>? Diagnostics,
     List<QuestionTagRequest>? Tags,
     int Status,
-    string? ExtraQues
+    string? ExtraQues,
+    bool? NewVersion
 );
 
 public record QuestionProblemRequest(
